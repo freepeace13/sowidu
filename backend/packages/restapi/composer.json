@@ -1,0 +1,27 @@
+{
+    "name": "sowidu/restapi",
+    "description": "REST API package for Laravel",
+    "version": "1.x-dev",
+    "require": {
+        "php": "^7.3|^8.0",
+        "illuminate/support": "^9.0",
+        "illuminate/contracts": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Packages\\RestApi\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Packages\\RestApi\\RestApiServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

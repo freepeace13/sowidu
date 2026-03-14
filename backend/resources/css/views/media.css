@@ -1,0 +1,7 @@
+.v-list--disabled {
+    .v-list__tile--disabled {
+        .v-icon {
+            color: rgba(0, 0, 0, 0.18);
+        }
+    }
+}

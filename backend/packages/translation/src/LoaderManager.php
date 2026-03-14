@@ -1,0 +1,43 @@
+<?php
+
+namespace Packages\Translation;
+
+use Illuminate\Translation\FileLoader;
+
+class LoaderManager extends FileLoader
+{
+    /**
+     * Load the messages for the given locale.
+     *
+     * @param  string  $locale
+     * @param  string  $group
+     * @param  string  $namespace
+     */
+    public function load($locale, $group, $namespace = null): array
+    {
+        $fileTranslations = parent::load($locale, $group, $namespace);
+
+        if (!is_null($namespace) && $namespace !== '*') {
+            return $fileTranslations;
+        }
+
+        $loaderTranslations = $this->getTranslationsForTranslationLoaders($locale, $group, $namespace);
+
+        return array_replace_recursive($fileTranslations, $loaderTranslations);
+    }
+
+    protected function getTranslationsForTranslationLoaders(
+        string $locale,
+        string $group,
+        ?string $namespace = null,
+    ): array {
+        return collect(Translation::loaders())
+            ->map(function (string $className) {
+                return app($className);
+            })
+            ->mapWithKeys(function (LoaderInterface $translationLoader) use ($locale, $group, $namespace) {
+                return $translationLoader->loadTranslations($locale, $group, $namespace);
+            })
+            ->toArray();
+    }
+}

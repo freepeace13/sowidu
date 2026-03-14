@@ -1,0 +1,29 @@
+{
+    "name": "sowidu/avatarable",
+    "description": "Database driven contactships loader and manager",
+    "version": "1.x-dev",
+    "require": {
+        "php": "^7.3|^8.0",
+        "illuminate/support": "^9.19",
+        "illuminate/contracts": "^9.19",
+        "illuminate/translation": "^9.19",
+        "illuminate/database": "^9.19"
+    },
+    "autoload": {
+        "psr-4": {
+            "Packages\\Avatarable\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Packages\\Avatarable\\AvatarServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

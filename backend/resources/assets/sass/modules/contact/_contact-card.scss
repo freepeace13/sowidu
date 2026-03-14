@@ -1,0 +1,192 @@
+
+.contactCard{
+    width: 380px;
+}
+
+.contactCardPic{
+    width: 110px;
+    height: 160px
+}
+.contactCardPicCompLil{
+    position: relative;
+    top: -46px;
+    right: -29px;
+    border-top: 7px solid rgb(33, 33, 33);
+    border-right: 7px solid rgb(33, 33, 33);
+    border-left: 10px solid rgb(33, 33, 33);
+    width: 90px;
+}
+
+.contactCardPicCompBig{
+    width: 110px;
+}
+
+.contactCardIcon{
+    font-size: 112px !important;
+    margin-top: 20px !important;
+}
+
+.contactDetailIcon{
+    font-size: 148px;
+    margin-top: 35px;
+    margin-left: 20px;
+}
+
+.contactDetailImageDummy{
+    height: 235px;
+}
+
+.card__actions{
+    margin-top: -35px !important;
+}
+
+.contactCardPortraitDetails{
+    object-fit: cover;
+    height: 350px;
+    width: 250px;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+.contactNameDetails{
+    width: 250px;
+}
+
+.contactPortraitDetails{
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.contactCompanyLogoDetails{
+    width: 100%;
+}
+
+.contactCardDetails{
+    width: 800px;
+}
+
+.threePointMenu{
+    margin-left: -10px;
+    top: -10px;
+}
+
+
+
+//GLOBAL
+
+
+.speed-dial{
+    bottom: 60px !important;
+    right: 60px !important;
+}
+
+
+
+.input-group label {
+    font-size: 16px !important;
+    font-weight: 100;
+}
+
+
+.input-group--text-field input,
+.input-group--text-field textarea {
+    font-size: 12px !important;
+}
+
+.fs3{
+    font-size: 3rem;
+}
+
+.input-group--text-field input,
+.input-group--text-field textarea {
+    font-weight: 100 !important;
+}
+.theme--dark .input-group input:disabled,
+.application .theme--dark.input-group input:disabled,
+.theme--dark .input-group textarea:disabled,
+.application .theme--dark.input-group textarea:disabled {
+    color: rgba(255,255,255,1);
+}
+
+.list__tile {
+    font-weight: 100;
+}
+
+.mt--30 {
+    margin-top: -30px !important;
+}
+.ml--10 {
+    margin-top: -10px !important;
+}
+.ml-50 {
+    margin-left: 50px !important;
+}
+.mb-60 {
+    margin-bottom: 60px !important;
+}
+.mt-icon {
+    margin-top: 20px !important;
+}
+
+
+.toolbar__title{
+    font-weight: 100 !important;
+}
+
+.headline{
+    font-weight: 100 !important;
+    font-size: 16px !important;
+    line-height: 12px !important;
+}
+.subheader{
+    font-weight: 100 !important;
+    font-size: 10px !important;
+}
+
+.display-5{
+    font-weight: 100 !important;
+    font-size: 12px !important;
+}
+
+.btn{
+    font-weight: 100 !important;
+    font-size: 10px !important;
+}
+
+.gradientBlack{
+    background: linear-gradient(45deg, rgb(14, 14, 14) 0%, rgb(37, 36, 36) 100%) !important;
+}
+
+.contact-thumbnail-card {
+    .media {
+        position: relative;
+        .employer-avatar {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 60px;
+        }
+    }
+    .v-card__title {
+        min-height: 118px;
+        max-height: 118px;
+        align-items: flex-start;
+
+        .v-menu {
+            position: absolute;
+            right: -7px;
+            top: 7px;
+        }
+    }
+    .v-card__actions {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+        .status-text {
+            font-size: 10px;
+            display: inline-block;
+            &:not(:first-child) {
+                margin-left: 15px;
+            }
+        }
+    }
+}

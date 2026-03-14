@@ -1,0 +1,35 @@
+{
+    "name": "sowidu/chatly",
+    "description": "Simple chat messaging module.",
+    "version": "1.x-dev",
+    "require": {
+        "php": "^8.0",
+        "musonza/chat": "^6.0",
+        "sowidu/shared": "1.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Chatly\\": "src/",
+            "Modules\\Chatly\\Database\\Factories\\": "database/factories/",
+            "Modules\\Chatly\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Chatly\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Chatly\\Providers\\ChatlyServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

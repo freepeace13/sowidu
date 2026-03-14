@@ -1,0 +1,32 @@
+{
+    "name": "sowidu/offer",
+    "description": "Offer is a simple offer system for Laravel.",
+    "version": "1.x-dev",
+    "require": {
+        "php": "^8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Offer\\": "src/",
+            "Modules\\Offer\\Models\\": "src/Models/",
+            "Modules\\Offer\\Models\\Relations\\": "src/Models/Relations/",
+            "Modules\\Offer\\Policies\\": "src/Policies/",
+            "Modules\\Offer\\Support\\": "src/Support/",
+            "Modules\\Offer\\Console\\": "src/Console/",
+            "Modules\\Offer\\Repositories\\": "src/Repositories/",
+            "Modules\\Offer\\Transformers\\": "src/Transformers/",
+            "Modules\\Offer\\Actions\\": "src/Actions/",
+            "Modules\\Offer\\Controllers\\": "src/Controllers/",
+            "Modules\\Offer\\Listeners\\": "src/Listeners/",
+            "Modules\\Offer\\Events\\": "src/Events/",
+            "Modules\\Offer\\Tests\\": "tests/",
+            "Modules\\Offer\\Database\\": "database/",
+            "Modules\\Offer\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

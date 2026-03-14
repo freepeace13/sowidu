@@ -1,0 +1,34 @@
+{
+    "name": "sowidu/catalog",
+    "description": "Catalog is a simple catalog system for Laravel.",
+    "version": "1.x-dev",
+    "require": {
+        "php": "^8.0",
+        "sowidu/shared": "1.x-dev",
+        "illuminate/support": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Catalog\\": "src/",
+            "Modules\\Catalog\\Database\\Factories\\": "database/factories/",
+            "Modules\\Catalog\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Catalog\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Catalog\\CatalogServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

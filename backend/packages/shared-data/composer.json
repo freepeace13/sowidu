@@ -1,0 +1,33 @@
+{
+    "name": "sowidu/laravel-shared-data",
+    "description": "Package for sharing data from Laravel to JavaScript.",
+    "version": "1.x-dev",
+    "require": {
+        "php": "^8.0",
+        "ext-json": "*",
+        "illuminate/support": "^9.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sowidu\\SharedData\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sowidu\\SharedData\\Providers\\SharedDataServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

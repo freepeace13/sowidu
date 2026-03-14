@@ -1,0 +1,12 @@
+
+export const mutations = {
+    SET_NOTIFICATIONS: 'SET_NOTIFICATIONS',
+    UPDATE_NOTIFICATION: 'UPDATE_NOTIFICATION',
+    INSERT_NOTIFICATION: 'INSERT_NOTIFICATION',
+    REMOVE_TOAST: 'REMOVE_TOAST',
+}
+
+export const actions = {
+    ALL: 'all',
+    READ: 'read'
+}

@@ -1,0 +1,53 @@
+name: CD-Staging
+
+on:
+  push:
+    branches: [staging] # branch where to watch changes/PR/commits
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PUSH_TOKEN }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22.8.0'
+
+      - run: cp env.staging .env
+      - run: npm install
+      - run: npm run production
+
+      - name: Commit built assets
+        run: |
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git checkout -B deploy
+            git add -f public/
+            git commit -m "Build front-end assets" --no-verify
+            git push -f origin deploy
+
+      - name: Deploy to staging server
+        uses: appleboy/ssh-action@master
+        with:
+          username: sowidu-dev
+          host: staging.sowidu.de
+          port: 2223
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: 'cd /home/sowidu-dev/sites/staging.sowidu.de && ./server_deploy.sh'
+
+  notify:
+    needs: deploy
+    if: always()
+    uses: ./.github/workflows/notify-deployment.yml
+    with:
+      environment: 'staging'
+      deployment_status: ${{ needs.deploy.result }}
+      github_compare: ${{ github.event.compare }}
+    secrets:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}

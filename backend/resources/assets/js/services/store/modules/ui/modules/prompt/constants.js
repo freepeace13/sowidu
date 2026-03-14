@@ -1,0 +1,3 @@
+export const PREPEND_PROMPT = 'PREPEND_PROMPT';
+export const REMOVE_PROMPT = 'REMOVE_PROMPT';
+export const CLEAR_PROMPTS = 'CLEAR_PROMPTS';

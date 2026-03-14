@@ -1,0 +1,41 @@
+{
+    "name": "sowidu/invoicify",
+    "description": "Invoicify is a simple invoicing system for Laravel.",
+    "version": "1.x-dev",
+    "authors": [
+        {
+            "name": "Kin Basco",
+            "email": "freepeace13@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "illuminate/view": "^9.0",
+        "sowidu/shared": "1.x-dev",
+        "mpdf/mpdf": "^8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Invoicify\\": "src/",
+            "Modules\\Invoicify\\Database\\Factories\\": "database/factories/",
+            "Modules\\Invoicify\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Invoicify\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Invoicify\\InvoicifyServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

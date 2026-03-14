@@ -1,0 +1,32 @@
+#lockscreen {
+    .v-dialog__content {
+        .v-dialog {
+            background: rgba(20, 20, 20, .94) !important;
+        }
+
+        .card {
+            .card__text {
+                padding: 40px;
+                h2 {
+                    font-weight: 100;
+                    font-size: 42px;
+                    span {
+                        font-weight: 100;
+                        font-size: 28px;
+                        margin-top: 14px;
+                        margin-left: -8px;
+                    }
+                }
+            }
+        }
+    }
+
+    .gradient-45deg-black-grey{
+        background: linear-gradient(45deg, #151515 0%, #302f2f 100%);
+    }
+
+    .gradient-45deg-light-blue-cyan{
+        background: linear-gradient(45deg, #0288d1 0%, #26c6da 100%);
+    }
+
+}

@@ -1,0 +1,71 @@
+# Cursor Rules for sw-web
+
+# Exclude dependency and build directories
+exclude: [
+  "vendor/",
+  "node_modules/",
+  "public/vendor/",
+  "public/horizon/",
+  "public/log-viewer/",
+  "public/telescope/",
+  "public/web-tinker/",
+  "storage/",
+  "bootstrap/cache/",
+  "docker/",
+  "database/dumps/",
+  "database/seeders/",
+  "database/factories/",
+  "app/Factories/",
+  "app/Database/",
+]
+
+# Exclude environment and secret files
+exclude: [
+  ".env",
+  "env.*",
+  "auth.json",
+]
+
+# Exclude lock and package manager files
+exclude: [
+  "composer.lock",
+  "package-lock.json",
+  "yarn.lock",
+  "pnpm-lock.yaml",
+]
+
+# Exclude IDE and helper files
+exclude: [
+  "_ide_helper_models.php",
+  ".php-cs-fixer.php",
+  ".editorconfig",
+  ".eslintrc.js",
+  ".prettierrc.json",
+  ".lintstagedrc.json",
+  "phpunit.xml.example",
+]
+
+# Allow everything else (source code, configs, docs)
+include: [
+  "app/",
+  "config/",
+  "routes/",
+  "resources/",
+  "tests/",
+  "features/",
+  "modules/",
+  "packages/",
+  "scripts/",
+  "Makefile",
+  "README.md",
+  "DEV.md",
+  "DEPLOY.md",
+  "TODO.md",
+  "NOTES.md",
+  "vite.config.mjs",
+  "tailwind.config.js",
+  "postcss.config.js",
+  ".nvmrc",
+  ".gitattributes",
+  ".gitignore",
+]

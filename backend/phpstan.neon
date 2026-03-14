@@ -1,0 +1,40 @@
+# PHPStan configuration for custom error ignoring - used when moving multiple files. This will just check proper imports.
+parameters:
+    paths:
+        - app/
+
+    level: 1
+
+    ignoreErrors:
+        - '#Property .* does not exist#'
+        - '#Call to an undefined static method#'
+        - '#Call to an undefined method#'
+        - '#Unsafe usage of new static\(\)#'
+        - '#Access to an undefined property [a-zA-Z0-9\\_]+::\$\w+#'
+        - '#Call to an undefined method#'
+        # - '#Variable .* might not be defined#'
+        # - '#Call to static method (?!make\(\)).* on an unknown class#'
+        # - '#Call to an undefined static method#'
+        # - '#Cannot call method .* on .*#'
+        # - '#Cannot access property .* on .*#'
+        # - '#Access to an undefined property#'
+        # - '#Method .* has no return type specified#'
+        # - '#Method .* should return .* but returns#'
+        # - '#Parameter .* of method .* expects .* given#'
+        # - '#Parameter .* expects .* given#'
+        # - '#Expression on left side of \?\? is not nullable#'
+        # - '#Using nullsafe property access on non-nullable type#'
+        # - '#Called .* which performs unnecessary work#'
+        # - '#Cannot access offset .* on mixed#'
+        # - '#Cannot access property .* on mixed#'
+        # - '#Relation .* is not found in .* model#'
+        # - '#Type .* of parameter .* of passed callable needs to be same or wider than parameter type .* of accepting callable#'
+        # - '#Default value of the parameter .* of method .* is incompatible with type#'
+        # - '#Method .* return type with generic class .* does not specify its types: .*#'
+        # - '#Method .* parameter .* with generic class .* but does not specify its types: .*#'
+        # - '#Method .* parameter .* with no value type specified in iterable type array#'
+        # - '#Method .* parameter .* with no type specified#'
+        # - '#Method .* return type has no value type specified in iterable type array#'
+        # - '#Unsafe usage of new static\(\)#'
+        # - '#Call to method .* on an unknown class#'
+        # - '#Property .* does not accept .*#'

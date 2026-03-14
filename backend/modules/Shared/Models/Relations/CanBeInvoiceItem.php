@@ -1,0 +1,59 @@
+<?php
+
+namespace Modules\Shared\Models\Relations;
+
+use App\Models\InvoiceItem;
+use Illuminate\Database\Eloquent\Builder;
+
+trait CanBeInvoiceItem
+{
+    public function markAsPaid()
+    {
+        return $this->update([
+            'is_paid' => true,
+        ]);
+    }
+
+    public function markAsUnPaid()
+    {
+        return $this->update([
+            'is_paid' => false,
+        ]);
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->is_paid;
+    }
+
+    public function isUnPaid(): bool
+    {
+        return !$this->is_paid;
+    }
+
+    public function scopeUnInvoiced(Builder $query): Builder
+    {
+        return $query->doesntHave('invoiceItem');
+    }
+
+    public function scopeUnPaid(Builder $query): Builder
+    {
+        return $query->where('is_paid', false);
+    }
+
+    public function scopePaid(Builder $query): Builder
+    {
+        return $query->where('is_paid', true);
+    }
+
+    public function invoiceItem()
+    {
+        return $this->morphOne(InvoiceItem::class, 'item');
+    }
+
+    public function isInvoiced(): bool
+    {
+        return $this->invoiceItem()
+            ->exists();
+    }
+}

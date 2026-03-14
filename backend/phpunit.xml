@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false">
+    <testsuites>
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Feature</directory>
+            <directory suffix=".php">./modules/invoicify/tests/Feature</directory>
+            <directory suffix=".php">./modules/chatly/tests/Feature</directory>
+            <directory suffix=".php">./modules/todos/tests/Feature</directory>
+            <directory suffix=".php">./modules/delivery-ticket/tests/Feature</directory>
+        </testsuite>
+
+        <testsuite name="Unit">
+            <directory suffix="Test.php">./tests/Unit</directory>
+            <directory suffix=".php">./modules/invoicify/tests/Unit</directory>
+            <directory suffix=".php">./modules/chatly/tests/Unit</directory>
+            <directory suffix=".php">./modules/todos/tests/Unit</directory>
+            <directory suffix=".php">./modules/delivery-ticket/tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">./app</directory>
+            <directory suffix=".php">./modules/chatly/src</directory>
+            <directory suffix=".php">./modules/invoicify/src</directory>
+            <directory suffix=".php">./modules/todos/src</directory>
+            <directory suffix=".php">./modules/delivery-ticket/src</directory>
+        </include>
+    </coverage>
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="APP_DEBUG" value="true"/>
+        <env name="DB_CONNECTION" value="mysql"/>
+        <env name="DB_DATABASE" value="testing"/>
+        <env name="CACHE_DRIVER" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="MAIL_MAILER" value="log"/>
+        <env name="ALLOW_SEND_SMS" value="false"/>
+    </php>
+</phpunit>

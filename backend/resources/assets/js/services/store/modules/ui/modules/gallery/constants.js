@@ -1,0 +1,3 @@
+export const UPDATE_SOURCE = 'UPDATE_SOURCE';
+export const CLOSE_GALLERY = 'CLOSE_GALLERY';
+export const OPEN_GALLERY = 'FILL_GALLERY';

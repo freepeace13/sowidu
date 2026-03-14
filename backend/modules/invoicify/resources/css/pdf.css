@@ -1,0 +1,8 @@
+.table-header-text {
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 100%;
+    font-size: 12pt;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

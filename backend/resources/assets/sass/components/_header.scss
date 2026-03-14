@@ -1,0 +1,28 @@
+.site-header {
+    .toolbar-brand {
+        margin-right: 16px;
+    }
+
+    .search-field-container {
+        .input-group {
+            background-color: rgb(25, 25, 25) !important;
+            width: 390px;
+        }
+    }
+}
+
+.theme--dark{
+    .v-text-field--solo{
+        .v-input__slot{
+            background: #1a1a1a !important;
+        }
+    }
+}
+
+.application{
+    .theme--dark.v-text-field--solo{
+        .v-input__slot {
+            background: #1a1a1a !important;
+          }
+    }
+}

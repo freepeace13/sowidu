@@ -1,0 +1,171 @@
+/* Todo - custom CSS */
+.todo {
+    width: 100%;
+    height: 100%;
+
+    .card-toolbar {
+        cursor: move !important;
+
+        .v-toolbar__content {
+            padding: 12px 12px;
+        }
+
+        .group-name-field {
+            .v-input__control {
+                .v-input__slot {
+                    padding: 0px;
+                    min-height: 36px;
+                    .v-text-field__slot {
+                        display: flex;
+                        align-items: center;
+
+                        input {
+                            margin-top: 0px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .task-sidebar-options {
+        .v-btn__content {
+            justify-content: start !important;
+        }
+    }
+
+    .task-viewer-modal {
+        .task-title-input {
+            .v-input__slot {
+                padding: 2px 0px;
+                min-height: auto;
+
+                input,
+                textarea {
+                    margin-top: 0px !important;
+
+                    &:hover {
+                        cursor: text;
+                    }
+                }
+            }
+        }
+
+        .subtask-list {
+            .subtask-item {
+                border: 1px solid #e0e0e0 !important;
+                border-bottom: none !important;
+            }
+            .subtask-item:last-child {
+                border-bottom: 1px solid #e0e0e0 !important;
+            }
+        }
+    }
+
+    .create-board-input {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .create-board-input input {
+        text-align: center;
+    }
+
+    .board-settings-menu {
+        .board-settings-menu-toolbar {
+            .v-toolbar__content {
+                padding: 0 16px;
+            }
+
+            .v-input--selection-controls__input {
+                margin-right: 0px !important;
+            }
+        }
+    }
+
+    .board-filter-options {
+        max-height: 200px;
+        overflow-y: auto;
+
+        div[role='listitem'] {
+            &:hover {
+                @apply tw-bg-gray-300;
+            }
+        }
+    }
+
+    .labels-list {
+        .task-label {
+            .v-chip__content {
+                cursor: pointer;
+            }
+        }
+    }
+
+    .task-label {
+        min-width: 45px;
+
+        .v-chip__content {
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        &[small] {
+            .v-chip__content {
+                display: none;
+            }
+
+            height: 5px;
+            min-width: 25px;
+        }
+    }
+
+    .task-label-container {
+        line-height: 10px;
+    }
+
+    .activity-log {
+        a {
+            @apply tw-font-bold tw-cursor-pointer tw-underline tw-capitalize;
+        }
+    }
+
+    .comment {
+        &.dense {
+            .v-card__title {
+                @apply tw-p-2 tw-text-sm;
+            }
+        }
+    }
+}
+
+.small.v-input {
+    font-size: 14px;
+
+    .v-input__slot {
+        min-height: 36px;
+
+        .v-text-field__slot {
+            input {
+                margin-top: 0px;
+            }
+        }
+    }
+}
+
+.v-toolbar {
+    &.content-pad-sm {
+        .v-toolbar__content {
+            padding: 0 12px;
+        }
+    }
+}
+
+.task-viewer-container {
+    .task-sidebar-options {
+        .v-btn__content {
+            justify-content: start !important;
+        }
+    }
+}

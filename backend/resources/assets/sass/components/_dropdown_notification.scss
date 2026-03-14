@@ -1,0 +1,8 @@
+.notification-widget--menu {
+    .notification-widget--menu--tile {
+        cursor: pointer;
+        &.unread { 
+            background: #424242;
+        }
+    }
+}

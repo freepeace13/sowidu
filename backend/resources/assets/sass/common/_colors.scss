@@ -1,0 +1,12 @@
+.background-black-grey {
+    background: $gradient-45deg-black-grey;
+}
+
+.background-light-blue-cyan {
+    background: $gradient-45deg-light-blue-cyan;
+}
+
+.gradient-black {
+    background: linear-gradient(
+        45deg, rgb(14, 14, 14) 0%, rgb(37, 36, 36) 100%);
+}

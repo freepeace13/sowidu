@@ -1,0 +1,196 @@
+---
+alwaysApply: true
+---
+# Module Organization & External Contracts
+
+Guidelines for organizing modules and defining external dependencies using the Ports and Adapters (Hexagonal Architecture) pattern.
+
+## Module Structure
+
+Modules live in `modules/{module-name}/` and should be self-contained with clear boundaries.
+
+```
+modules/{module-name}/
+├── docs/                    # Module-specific documentation
+├── src/
+│   ├── Actions/            # Business logic (implements incoming ports)
+│   ├── Contracts/          # Interfaces defining ports
+│   │   └── External/       # Outgoing ports (external dependencies)
+│   ├── Http/
+│   │   ├── Controllers/    # HTTP adapters (incoming adapters)
+│   │   └── Resources/      # Response transformers
+│   ├── Models/             # Domain models
+│   └── Providers/          # Service providers
+├── tests/                   # Module tests
+├── routes/                  # Module routes
+├── config/                  # Module configuration
+├── agents.md               # Agent patterns and guidelines
+└── README.md               # Module overview
+```
+
+## External Contracts (Outgoing Ports)
+
+When a module needs functionality from external systems (main app, other modules, packages):
+
+### Rule 1: Define Interface in Module
+
+**Location**: `modules/{module-name}/src/Contracts/External/`
+
+Define what the module needs as an interface:
+
+```php
+<?php
+
+namespace Modules\Chatly\Contracts\External;
+
+interface UserSearchContract
+{
+    public function search(string $keyword, array $filters, int $limit): array;
+    public function findByUrn(string $urn): mixed;
+}
+```
+
+### Rule 2: Implement Adapter in Main App
+
+**Location**: `app/Services/{ModuleName}/`
+
+Implement the interface in the main application:
+
+```php
+<?php
+
+namespace App\Services\Chat;
+
+use Modules\Chatly\Contracts\External\UserSearchContract;
+
+class UserSearchAdapter implements UserSearchContract
+{
+    public function search(string $keyword, array $filters, int $limit): array
+    {
+        // Implementation using App\Models\User, etc.
+    }
+}
+```
+
+### Rule 3: Register Binding in Service Provider
+
+**Location**: `app/Providers/{ModuleName}ServiceProvider.php`
+
+```php
+public function register(): void
+{
+    $this->app->bind(
+        \Modules\Chatly\Contracts\External\UserSearchContract::class,
+        \App\Services\Chat\UserSearchAdapter::class
+    );
+}
+```
+
+### Rule 4: Inject Contract in Module
+
+**Never** import `App\Models\*` directly in modules. Always use contracts:
+
+```php
+<?php
+
+namespace Modules\Chatly\Actions;
+
+use Modules\Chatly\Contracts\External\UserSearchContract;
+
+class SearchParticipants
+{
+    public function __construct(
+        protected UserSearchContract $userSearch
+    ) {}
+
+    public function search(string $keyword): array
+    {
+        return $this->userSearch->search($keyword, [], 10);
+    }
+}
+```
+
+## Anti-Patterns to Avoid
+
+### ❌ Direct Model Imports in Modules
+
+```php
+// BAD - Module directly depends on main app
+namespace Modules\Chatly\Actions;
+
+use App\Models\User; // ❌ Never do this!
+
+class SearchUsers
+{
+    public function search($keyword)
+    {
+        return User::search($keyword)->get();
+    }
+}
+```
+
+### ❌ Static Helper Calls Without Contracts
+
+```php
+// BAD - Direct dependency on helper function
+namespace Modules\Chatly\Resources;
+
+class ParticipantResource
+{
+    public function toArray($request)
+    {
+        return [
+            'photo' => get_user_avatar_url($this->user), // ❌ No!
+        ];
+    }
+}
+```
+
+### ✅ Use Contracts Instead
+
+```php
+// GOOD - Use contract
+namespace Modules\Chatly\Resources;
+
+use Modules\Chatly\Contracts\External\UserDisplayContract;
+
+class ParticipantResource
+{
+    protected static UserDisplayContract $userDisplay;
+
+    public function toArray($request)
+    {
+        return [
+            'photo' => static::$userDisplay->getAvatarUrl($this->user), // ✅ Yes!
+        ];
+    }
+}
+```
+
+## Benefits of This Pattern
+
+1. **Decoupling**: Modules don't depend on main app structure
+2. **Testability**: Easy to mock external dependencies
+3. **Portability**: Modules can be extracted to packages
+4. **Flexibility**: Can swap implementations without changing modules
+5. **Clear Boundaries**: Explicit interfaces define what module needs
+
+## Dependency Direction
+
+```
+Main Application
+    ↓ (implements)
+Adapter Classes
+    ↓ (implements)
+External Contracts (Interfaces)
+    ↑ (depends on)
+Module Actions/Controllers
+```
+
+The module depends on **abstractions** (interfaces), not concretions (models).
+
+## References
+
+- External Contracts Pattern: `modules/chatly/docs/external-contracts.md`
+- Architecture Overview: `modules/chatly/docs/architecture.md`
+- Agent Guidelines: `modules/chatly/agents.md`

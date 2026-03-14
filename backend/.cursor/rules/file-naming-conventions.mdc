@@ -1,0 +1,241 @@
+---
+alwaysApply: true
+---
+# File Naming Conventions & Best Practices
+
+Consistent file naming and coding practices across the Sowidu project.
+
+## File Naming by Type
+
+### PHP Classes
+**Convention**: `PascalCase.php`
+
+**Examples**:
+- ✅ `UserSearchAdapter.php`
+- ✅ `CreateConversationAction.php`
+- ✅ `MessageController.php`
+- ❌ `user_search_adapter.php`
+- ❌ `create-conversation-action.php`
+
+### Vue Components
+**Convention**: `PascalCase.vue`
+
+**Examples**:
+- ✅ `ChatsList.vue`
+- ✅ `MessageInput.vue`
+- ✅ `ConversationMenu.vue`
+- ❌ `chats-list.vue`
+- ❌ `message_input.vue`
+
+### Documentation Files
+**Convention**: `kebab-case.md`
+
+**Examples**:
+- ✅ `integration-guide.md`
+- ✅ `testing-guide.md`
+- ✅ `external-contracts.md`
+- ❌ `IntegrationGuide.md`
+- ❌ `testing_guide.md`
+
+**Exception**: Index and guideline files use `README.md` or `UPPERCASE-WITH-DASHES.md`
+- ✅ `README.md`
+- ✅ `DOCUMENTATION_GUIDELINES.md`
+- ✅ `CONTRIBUTING.md`
+
+### Configuration Files
+**Convention**: `kebab-case.php`
+
+**Examples**:
+- ✅ `chatly.php`
+- ✅ `media-library.php`
+- ✅ `chunk-upload.php`
+- ❌ `Chatly.php`
+- ❌ `media_library.php`
+
+### Test Files
+**Convention**: `{ClassName}Test.php` (PascalCase + Test suffix)
+
+**Examples**:
+- ✅ `AddParticipantTest.php`
+- ✅ `CreateConversationTest.php`
+- ✅ `SearchControllerTest.php`
+- ❌ `add_participant_test.php`
+- ❌ `test_create_conversation.php`
+
+### JavaScript/TypeScript Files
+**Convention**: `camelCase.js` or `kebab-case.js` (consistent within project)
+
+**Examples**:
+- ✅ `chatListener.js`
+- ✅ `chat-listener.js`
+- ❌ `ChatListener.js` (unless it's a class/component)
+
+## Class Naming Conventions
+
+### Actions
+**Pattern**: `{Verb}{Noun}Action`
+
+**Examples**:
+- ✅ `CreateConversationAction`
+- ✅ `UpdateUserProfileAction`
+- ✅ `GenerateInvoicePdfAction`
+- ❌ `ConversationCreator`
+- ❌ `UserUpdater`
+
+### Contracts/Interfaces
+**Pattern**: `{Verb}{Noun}Contract` or `{Adjective}{Noun}Interface`
+
+**Examples**:
+- ✅ `CreatesConversationsContract`
+- ✅ `UserSearchContract`
+- ✅ `AuthorizationContract`
+- ❌ `ConversationCreator`
+- ❌ `IUserSearch`
+
+### Adapters
+**Pattern**: `{Name}Adapter`
+
+**Examples**:
+- ✅ `UserSearchAdapter`
+- ✅ `MediaManagerAdapter`
+- ✅ `AuthorizationAdapter`
+- ❌ `UserSearchService`
+- ❌ `MediaManager`
+
+### Controllers
+**Pattern**: `{Name}Controller`
+
+**Examples**:
+- ✅ `ConversationController`
+- ✅ `MessageController`
+- ✅ `SearchController`
+
+### Resources (API)
+**Pattern**: `{Name}Resource`
+
+**Examples**:
+- ✅ `ConversationResource`
+- ✅ `MessageResource`
+- ✅ `ParticipantResource`
+
+## Best Practices
+
+### Dependency Injection
+
+**Always** use constructor injection, never static calls:
+
+```php
+// ✅ GOOD - Constructor injection
+class CreateConversation
+{
+    public function __construct(
+        protected UrnResolverContract $urnResolver,
+        protected AuthorizationContract $authorization
+    ) {}
+}
+
+// ❌ BAD - Static calls
+class CreateConversation
+{
+    public function create()
+    {
+        UrnManager::resolve($urn); // Static call
+        Gate::authorize($ability);  // Static call
+    }
+}
+```
+
+### Use Contracts Over Concrete Classes
+
+**Always** depend on interfaces when contracts are available:
+
+```php
+// ✅ GOOD - Depend on contract
+use Modules\Chatly\Contracts\External\UserSearchContract;
+
+public function __construct(UserSearchContract $userSearch) {}
+
+// ❌ BAD - Depend on concrete class
+use App\Services\Chat\UserSearchAdapter;
+
+public function __construct(UserSearchAdapter $userSearch) {}
+```
+
+### Never Return HTTP Responses from Actions
+
+Actions should return data/models, not HTTP responses:
+
+```php
+// ✅ GOOD - Return data
+public function create($user, $params): Conversation
+{
+    return Chat::createConversation($params);
+}
+
+// ❌ BAD - Return HTTP response
+public function create($user, $params)
+{
+    $conversation = Chat::createConversation($params);
+    return response()->json($conversation); // ❌ No!
+}
+```
+
+### Document When Creating
+
+When creating new files:
+
+1. **Check** for existing documentation
+2. **Create** in appropriate location (see documentation-organization.mdc)
+3. **Update** index/README files
+4. **Cross-reference** related documentation
+5. **Follow** naming conventions
+
+### Module Isolation
+
+Modules should never directly import main app code:
+
+```php
+// ❌ BAD - Module imports main app
+namespace Modules\Chatly\Actions;
+
+use App\Models\User;          // ❌ No!
+use App\Services\UserService; // ❌ No!
+
+// ✅ GOOD - Module uses contracts
+namespace Modules\Chatly\Actions;
+
+use Modules\Chatly\Contracts\External\UserSearchContract; // ✅ Yes!
+```
+
+## Directory Structure Consistency
+
+Maintain consistent directory structure across modules:
+
+```
+modules/{module-name}/
+├── src/
+│   ├── Actions/           # Business logic
+│   ├── Contracts/         # Interfaces (ports)
+│   │   └── External/      # External dependencies
+│   ├── Http/
+│   │   ├── Controllers/   # HTTP adapters
+│   │   ├── Requests/      # Form requests
+│   │   └── Resources/     # API resources
+│   ├── Models/            # Domain models
+│   └── Providers/         # Service providers
+├── tests/
+│   ├── Unit/             # Unit tests
+│   ├── Feature/          # Feature tests
+│   └── Integration/      # Integration tests
+├── docs/                 # Module documentation
+├── config/               # Module config
+├── routes/               # Module routes
+├── agents.md            # Agent patterns
+└── README.md            # Module overview
+```
+
+## References
+
+- Action Standards: `.cursor/rules/action-classes.mdc`
+- Module Organization: `.cursor/rules/module-organization.mdc`
+- Documentation: `.cursor/rules/documentation-organization.mdc`

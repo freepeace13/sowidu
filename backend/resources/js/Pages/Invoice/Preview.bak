@@ -1,0 +1,1128 @@
+<script setup>
+import { useDateFormat } from '@/Composables/useDayJs'
+import { computed, ref } from 'vue'
+import { toRef } from 'vue'
+import { router } from '@inertiajs/vue2'
+import useGlobalVariables from '@/Composables/useGlobalVariables'
+import { authCan } from '@/Composables/useAuth'
+import { useForm } from '@inertiajs/vue2'
+import { isNotNil, padLeft } from '@/Composables/useUtils'
+import DurationForm from './Components/DurationForm.vue'
+import html2pdf from 'html2pdf.js'
+import '@/../css/views/print-preview.css'
+import chunk from '@/Utils/chunkExtra'
+import DeductionsPreview from './Components/DeductionsPreview.vue'
+import DeductionsManualPreview from './Components/DeductionsManualPreview.vue'
+import DeductionTotalPreview from './Components/DeductionTotalPreview.vue'
+import number_format from '@/Utils/NumberFormat'
+
+const props = defineProps({
+    invoice: {
+        required: true,
+        type: Object,
+    },
+    items: {
+        required: true,
+        type: Array,
+    },
+    totalPrice: {
+        required: true,
+        type: [Number, String],
+    },
+    permissions: {
+        required: true,
+        type: Object,
+    },
+    workLogs: {
+        type: Array,
+    },
+})
+
+const { $t, $route, $confirm } = useGlobalVariables()
+const subjectInputIsFocused = ref(false)
+const descriptionInputIsFocused = ref(false)
+const notesInputIsFocused = ref(false)
+
+const printPreviewRef = ref(null)
+const isDownloading = ref(false)
+const invoice = toRef(props, 'invoice')
+const logo = ref(invoice.value.company.photo)
+const form = useForm({
+    subject: invoice.value.subject,
+    description: invoice.value.description,
+    notes: invoice.value.notes,
+})
+
+const printing = ref(false)
+const descriptionDOM = ref(null)
+
+const client = computed(() => invoice.value.client)
+const company = computed(() => invoice.value.company)
+const order = computed(() => invoice.value.order)
+const currency = computed(() => invoice.value.currency?.symbol)
+const viewerCanEdit = computed(() => authCan('can_update_invoice'))
+const hasManagingDirector = computed(() =>
+    isNotNil(company.value.invoice_defaults?.managing_director?.name),
+)
+const companyHasWebsite = computed(() =>
+    isNotNil(company.value.invoice_defaults?.website),
+)
+const companyInvoiceDefaults = computed(() => company.value.invoice_defaults)
+const hasValidCommercialRegister = computed(
+    () =>
+        isNotNil(companyInvoiceDefaults.value?.commercial_register) &&
+        isNotNil(companyInvoiceDefaults.value?.commercial_register_number),
+)
+
+const companyLegalForm = computed(
+    () =>
+        company.value.legal_form?.legal_form ??
+        company.value.legal_form?.abbreviation,
+)
+
+const clientLegalForm = computed(
+    () =>
+        client.value.legalform ??
+        client.value.legal_form?.legal_form ??
+        client.value.legal_form?.abbreviation ??
+        '',
+)
+
+const deliveryAddress = computed(() => order.value.delivery_address)
+const companyAddressSection = computed(() => {
+    const address = company.value?.address
+    const firstPart = [address?.street, address?.house_number]
+        .filter((val) => val !== null)
+        .join(' ')
+
+    const secondPart = [address?.zipcode, address?.city]
+        .filter((val) => val !== null)
+        .join(' ')
+
+    return [`${firstPart};`, secondPart].filter((val) => val).join(' ')
+})
+const companyInfo = computed(() => {
+    return [company.value?.name, `${companyLegalForm.value};`]
+        .filter((val) => val)
+        .join(' ')
+})
+const addressSectionIsOverflowing = computed(() => {
+    const all = [companyInfo.value, companyAddressSection.value]
+        .filter((val) => val)
+        .join(' ')
+
+    return all.length > 59
+})
+const headers = [
+    {
+        text: $t('invoices.preview.table.pos'),
+        value: 'name',
+        sortable: false,
+        align: 'left',
+        width: '6%',
+    },
+    {
+        text: $t('invoices.preview.table.item-count'),
+        value: 'quantity',
+        sortable: false,
+        align: 'left',
+        width: '7%',
+    },
+    {
+        text: $t('invoices.preview.table.item-unit'),
+        value: 'unit_name',
+        sortable: false,
+        align: 'left',
+        width: '12%',
+    },
+    {
+        text: $t('invoices.preview.table.item-description'),
+        value: 'quantity',
+        sortable: false,
+        align: 'left',
+    },
+    {
+        text: $t('invoices.preview.table.price-per-piece'),
+        sortable: false,
+        align: 'right',
+        width: '15%',
+    },
+    {
+        text: $t('invoices.preview.table.total-price'),
+        sortable: false,
+        align: 'right',
+        width: '15%',
+    },
+]
+
+function updateSubjectOrDescription() {
+    form.patch(
+        $route('invoices.update.subject_and_description', invoice.value.id),
+    )
+}
+
+async function print() {
+    printing.value = true
+
+    setTimeout(() => (window.print(), (printing.value = false)), 500)
+}
+
+function download() {
+    const width = 792 // Width of an A4 page in px
+    const height = 1122.5 // Height of an A4 page in px
+    const windowMultiplier = 1
+    isDownloading.value = true
+    const target = printPreviewRef.value // Content to be printed
+
+    html2pdf()
+        .from(target)
+        .set({
+            filename: `${invoice.value.internal_id}.pdf`,
+            image: { type: 'jpeg', quality: 1 },
+            jsPDF: {
+                orientation: 'p', // Portrait mode
+                unit: 'px',
+                format: [width, height], // Set the page size to A4
+            },
+            html2canvas: {
+                scale: 2, // Higher scale for better resolution
+                backgroundColor: '#ffffff',
+                windowWidth: width * windowMultiplier,
+                windowHeight: height * windowMultiplier,
+            },
+            pagebreak: {
+                mode: ['css', 'legacy'], // Enable both CSS and legacy mode for page breaks
+                avoid: ['tr', 'img', '.no-break'], // Avoid page breaks inside images
+            },
+        })
+        .save()
+        .then(() => {
+            isDownloading.value = false
+        })
+        .catch((error) => {
+            isDownloading.value = false
+            console.error('PDF generation failed:', error)
+        })
+}
+function getUnitName(item) {
+    if (item?.unit || item?.is_work_log) {
+        return $t('labels.hour')
+    }
+
+    return item?.unit_name ?? item?.details?.unit_name ?? '--'
+}
+
+const description = computed(() => {
+    return invoice.value.description
+        ? invoice.value.description
+              .replace(/&/g, '&amp;') // escape &
+              .replace(/</g, '&lt;') // escape <
+              .replace(/>/g, '&gt;') // escape >
+              .replace(/\n/g, '<br>')
+        : ''
+})
+
+const notes = computed(() => {
+    return invoice.value.notes
+        ? invoice.value.notes
+              .replace(/&/g, '&amp;') // escape &
+              .replace(/</g, '&lt;') // escape <
+              .replace(/>/g, '&gt;') // escape >
+              .replace(/\n/g, '<br>')
+        : ''
+})
+
+const subject = computed(() => invoice.value.subject)
+
+function estimateVisibleLines(text, width, fontSize) {
+    const lines = text.split(/\n/g) // Split text into lines based on line breaks
+    let lineCount = 0
+
+    for (const line of lines) {
+        const words = line.split(' ') // Split each line into words
+        let lineLength = 0
+
+        for (const word of words) {
+            // Estimate the width of the word based on average character width
+            const wordWidth = word.length * (fontSize * 0.6) // 0.6 is a rough average character width to font size ratio
+
+            // Add a space width for separation unless it's the first word
+            if (lineLength > 0) {
+                lineLength += fontSize * 0.2 // Space between words
+            }
+
+            // Check if adding the word exceeds the container width
+            if (lineLength + wordWidth > width) {
+                // Start a new line if the current line exceeds the width
+                lineCount++
+                lineLength = wordWidth // Reset line length for the new line
+            } else {
+                // Add the word to the current line
+                lineLength += wordWidth
+            }
+        }
+
+        // Account for the line after processing all words
+        if (lineLength > 0) {
+            lineCount++
+        }
+    }
+
+    return lineCount
+}
+
+const linebreaks = computed(() => {
+    const fontSize = 12 // Font size in pixels
+    const containerWidth = 692 // Width of the container in pixels
+    const linebreaks = estimateVisibleLines(
+        invoice.value.description ?? '',
+        containerWidth,
+        fontSize,
+    )
+    return linebreaks
+})
+
+const invoiceItems = computed(() => {
+    const items = [...props.workLogs, ...props.items]
+
+    let def =
+        linebreaks.value > 28
+            ? 0
+            : Math.round(10 - Math.floor(linebreaks.value / 2))
+
+    let group = chunk(items, def, 15)
+
+    return group
+})
+
+function confirmMarkingAsPaid() {
+    $confirm({
+        title: $t('labels.warning'),
+        question: $t('invoices.message.confirm_marking_as_paid'),
+        type: 'warning',
+        confirm: () => {
+            router.post(
+                window.route('invoices.mark_as_paid', {
+                    invoice: invoice.value,
+                }),
+                {
+                    preserveState: true,
+                    preserveScroll: true,
+                    only: ['errors', 'flash'],
+                },
+            )
+        },
+    })
+}
+
+function confirmSendToClient() {
+    $confirm({
+        title: $t('labels.warning'),
+        question: $t('invoices.message.confirm_send_to_client'),
+        type: 'info',
+        confirm: () => {
+            router.post(
+                window.route('invoices.send_to_client', {
+                    invoice: invoice.value,
+                }),
+                {
+                    preserveState: true,
+                    preserveScroll: true,
+                    only: ['invoice'],
+                },
+            )
+        },
+    })
+}
+</script>
+<!-- eslint-disable vue/no-v-html -->
+<template>
+    <div class="tw-relative tw-h-full tw-w-full">
+        <v-toolbar
+            class="no-print"
+            color="white"
+            flat
+        >
+            <v-toolbar-title class="title tw-flex tw-items-center">
+                <div class="md:tw-text-xl tw-text-lg">
+                    {{ $t('invoices.labels.print-preview') }}
+                </div>
+            </v-toolbar-title>
+            <v-spacer />
+            <v-btn
+                color="info"
+                :disabled="!invoice.status.is_draft"
+                depressed
+                @click="confirmSendToClient"
+            >
+                <v-icon left>email</v-icon>
+                {{ $t('invoices.buttons.send-to-client') }}
+            </v-btn>
+            <v-btn
+                v-if="invoice.is_paid"
+                color="success"
+                depressed
+            >
+                <v-icon left>done_outline</v-icon>
+                {{ $t('invoices.labels.paid') }}
+            </v-btn>
+            <v-btn
+                v-if="!invoice.is_paid"
+                color="primary"
+                :disabled="!invoice.status.is_pending"
+                @click="confirmMarkingAsPaid"
+            >
+                <v-icon left>email</v-icon>
+                {{ $t('invoices.buttons.mark-as-paid') }}
+            </v-btn>
+            <v-btn
+                color="primary"
+                depressed
+                :loading="isDownloading"
+                :disabled="isDownloading"
+                @click="download"
+            >
+                <v-icon left>file_download</v-icon>
+                {{ $t('buttons.download-pdf') }}
+            </v-btn>
+            <v-btn
+                color="primary"
+                depressed
+                @click="print"
+            >
+                <v-icon left>print</v-icon>
+                {{ $t('invoices.buttons.print') }}
+            </v-btn>
+        </v-toolbar>
+        <v-spacer class="no-print" />
+        <v-divider class="no-print" />
+        <v-container fluid>
+            <v-flex
+                ref="printPreviewRef"
+                xs12
+                class="tw-justify-around tw-flex tw-flex-col preview-sheet-container"
+            >
+                <v-sheet
+                    v-for="(items, index) in invoiceItems"
+                    :key="index"
+                    :class="[
+                        {
+                            'tw-pt-24': index == 0,
+                            'tw-pt-14': index !== 0,
+                            '!tw-pt-10': printing,
+                            'tw-mb-10': !isDownloading || !printing,
+                            '!tw-mb-0': isDownloading || printing,
+                            '!tw-h-[1122.5px]':
+                                !notesInputIsFocused && !printing,
+                            '!tw-h-[1065px]': printing,
+                            '!tw-min-h-[1122.5px]': notesInputIsFocused,
+                        },
+                        'tw-p-0 tw-pb-10 preview-sheet tw-mx-auto',
+                    ]"
+                    color="white"
+                    elevation="10"
+                >
+                    <v-container
+                        grid-list-md
+                        fluid
+                        pa-0
+                        class="tw-relative tw-h-full tw-flex tw-flex-col"
+                    >
+                        <div :class="['tw-flex tw-items-start tw-mb-5']">
+                            <div
+                                :class="[
+                                    'tw-text-lg tw-w-full payer tw-h-full tw-flex tw-flex-col',
+                                    { 'tw-opacity-0': index !== 0 },
+                                ]"
+                            >
+                                <div
+                                    :class="[
+                                        'tw-text-xxs',
+                                        'address',
+                                        {
+                                            'is-overflowed':
+                                                addressSectionIsOverflowing,
+                                        },
+                                    ]"
+                                >
+                                    <div>
+                                        {{ companyInfo }}
+                                    </div>
+
+                                    <!-- Company Address -->
+                                    <div>
+                                        {{ companyAddressSection }}
+                                    </div>
+                                </div>
+                                <div class="tw-text-base">
+                                    {{ client?.name }}
+                                    {{ clientLegalForm }}
+                                </div>
+                                <div class="tw-text-base payer-info">
+                                    {{
+                                        [
+                                            client?.address?.street,
+                                            client?.address?.house_number,
+                                        ]
+                                            .filter((val) => val !== null)
+                                            .join(' ')
+                                    }}
+                                </div>
+                                <div class="tw-text-base payer-info">
+                                    {{
+                                        [
+                                            client?.address?.zipcode,
+                                            client?.address?.city,
+                                        ]
+                                            .filter((val) => val !== null)
+                                            .join(' ')
+                                    }}
+                                </div>
+                                <div
+                                    class="tw-flex tw-flex-grow tw-items-end tw-font-semibold tw-text-base"
+                                >
+                                    {{ invoice?.kind?.label }}
+                                </div>
+                            </div>
+
+                            <!-- Vendor details -->
+                            <div
+                                class="tw-text-left pt-0 contractor tw-w-[18rem]"
+                            >
+                                <div class="tw-flex tw-justify-end">
+                                    <img
+                                        class="tw-object-cover w-full"
+                                        :src="logo"
+                                        @error="logo = '/storage/companies.png'"
+                                    />
+                                </div>
+                                <div
+                                    v-if="index == 0"
+                                    class="tw-font-semibold tw-text-base"
+                                >
+                                    {{ company.name }}
+                                    {{ companyLegalForm }}
+                                </div>
+                                <div
+                                    v-if="index == 0"
+                                    class="tw-font-semibold tw-text-sm"
+                                >
+                                    <div>
+                                        {{
+                                            [
+                                                company?.address?.street,
+                                                company?.address?.house_number,
+                                            ].join(' ')
+                                        }}
+                                    </div>
+                                    <div>
+                                        {{
+                                            [
+                                                company?.address?.zipcode,
+                                                company?.address?.city,
+                                            ].join(' ')
+                                        }}
+                                    </div>
+                                </div>
+                                <div
+                                    v-if="companyHasWebsite && index == 0"
+                                    class="tw-font-semibold tw-text-[10px] tw-underline"
+                                >
+                                    <div>
+                                        {{ company?.invoice_defaults?.website }}
+                                    </div>
+                                    <div>
+                                        {{
+                                            company?.invoice_defaults
+                                                ?.company_email
+                                        }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- End Vendor Details -->
+                        <!-- Invoice Details -->
+                        <div
+                            v-if="index == 0"
+                            class="tw-mb-5"
+                        >
+                            <div
+                                xs6
+                                class="tw-pb-3 tw-flex tw-justify-between"
+                            >
+                                <div class="tw-pr-4">
+                                    <div class="tw-text-xs tw-font-semibold">
+                                        {{ $t('invoices.preview.invoice') }}:
+                                    </div>
+                                    <div>
+                                        {{
+                                            invoice.external_id ??
+                                            invoice.internal_id
+                                        }}
+                                    </div>
+                                </div>
+                                <div class="tw-pr-2">
+                                    <div class="tw-text-xs tw-font-semibold">
+                                        {{ $t('invoices.labels.order-no') }}:
+                                    </div>
+                                    <div>
+                                        {{ order.order_number }}
+                                    </div>
+                                </div>
+                                <div class="tw-ml-auto">
+                                    <div class="tw-font-semibold tw-text-xs">
+                                        {{ $t('labels.date') }}:
+                                    </div>
+                                    <div class="tw-font-normal">
+                                        {{
+                                            useDateFormat(
+                                                invoice?.send_date ??
+                                                    invoice?.updated_at ??
+                                                    invoice?.created_at,
+                                            )
+                                        }}
+                                    </div>
+                                </div>
+                            </div>
+                            <v-layout
+                                row
+                                wrap
+                                class="tw-text-xs"
+                            >
+                                <v-flex
+                                    xs2
+                                    pt-0
+                                >
+                                    {{
+                                        $t(
+                                            'invoices.preview.construction-site',
+                                        )
+                                    }}:
+                                </v-flex>
+                                <v-flex
+                                    xs6
+                                    pt-0
+                                    class="tw-text-xs"
+                                >
+                                    {{
+                                        [
+                                            deliveryAddress?.street,
+                                            deliveryAddress?.house_number,
+                                            deliveryAddress?.zipcode,
+                                            deliveryAddress?.city,
+                                        ]
+                                            .filter((i) => i)
+                                            .join('-')
+                                    }}
+                                </v-flex>
+                            </v-layout>
+                            <v-layout
+                                row
+                                wrap
+                                class="tw-text-xs tw-leading-3"
+                            >
+                                <v-flex
+                                    xs2
+                                    py-0
+                                >
+                                    {{
+                                        $t('invoices.preview.execution-period')
+                                    }}:
+                                </v-flex>
+                                <v-flex
+                                    xs6
+                                    py-0
+                                    class="tw-flex tw-gap-x-2"
+                                >
+                                    <div>
+                                        {{
+                                            invoice.execution_period_start ?? invoice
+                                                ?.execution_period
+                                                ?.start,
+                                        }}
+                                    </div>
+                                    <div>-</div>
+                                    <div>
+                                        {{
+                                            invoice.execution_period_end ?? invoice.execution_period
+                                                ?.end,
+                                        }}
+                                    </div>
+                                    <DurationForm
+                                        v-if="viewerCanEdit && !isDownloading"
+                                        :invoice="invoice.id"
+                                        :start="invoice.execution_period.start"
+                                        :end="invoice.execution_period.end"
+                                    />
+                                </v-flex>
+                            </v-layout>
+                        </div>
+                        <!-- End Invoice Details -->
+                        <div
+                            v-if="index == 0"
+                            ref="descriptionDOM"
+                            class="tw-w-full"
+                        >
+                            <v-text-field
+                                v-if="viewerCanEdit"
+                                v-model="form.subject"
+                                :loading="form.processing"
+                                :disabled="form.processing"
+                                :error-messages="form.errors.subject"
+                                :hide-details="!form.errors.subject"
+                                :placeholder="
+                                    subjectInputIsFocused
+                                        ? $t('invoices.preview.subject')
+                                        : ''
+                                "
+                                :flat="!subjectInputIsFocused"
+                                solo
+                                single-line
+                                :class="[
+                                    'small invoice-subject-input tw-full invoice-input',
+                                    {
+                                        'is-focused': subjectInputIsFocused,
+                                        'is-not-focused':
+                                            !subjectInputIsFocused,
+                                    },
+                                ]"
+                                @focus="subjectInputIsFocused = true"
+                                @mouseover="subjectInputIsFocused = true"
+                                @mouseleave="subjectInputIsFocused = false"
+                                @blur="
+                                    () => {
+                                        subjectInputIsFocused = false
+                                        updateSubjectOrDescription()
+                                    }
+                                "
+                            />
+                            <div
+                                v-else
+                                class="mt-2 tw-px-[5px]"
+                            >
+                                {{ subject }}
+                            </div>
+
+                            <VTextarea
+                                v-if="
+                                    viewerCanEdit && descriptionInputIsFocused
+                                "
+                                v-model="form.description"
+                                auto-grow
+                                :flat="!descriptionInputIsFocused"
+                                :loading="form.processing"
+                                :disabled="form.processing"
+                                :error-messages="form.errors.description"
+                                :hide-details="!form.errors.description"
+                                :placeholder="
+                                    $t('invoices.preview.add-description')
+                                "
+                                solo
+                                :class="[
+                                    'small invoice-subject-input no-margin-top !shadow-none tw-p-0 invoice-input',
+                                    {
+                                        'is-focused': descriptionInputIsFocused,
+                                        'is-not-focused':
+                                            !descriptionInputIsFocused,
+                                    },
+                                ]"
+                                @mouseleave="descriptionInputIsFocused = false"
+                                @focus="descriptionInputIsFocused = true"
+                                @blur="
+                                    () => {
+                                        descriptionInputIsFocused = false
+                                        updateSubjectOrDescription()
+                                    }
+                                "
+                            />
+                            <div
+                                v-else
+                                class="tw-text-[12px] tw-p-[5px] tw-whitespace-normal tw-min-h-5"
+                                @mouseover="descriptionInputIsFocused = true"
+                                @click.prevent="
+                                    descriptionInputIsFocused = true
+                                "
+                                v-html="description"
+                            />
+                        </div>
+                        <!-- END Invoice inputs -->
+
+                        <div
+                            class="elevation-0 px-0 py-0 dense-header columns-center invoice-items-table tw-flex-1"
+                        >
+                            <div class="v-table__overflow">
+                                <table class="w-full">
+                                    <tr
+                                        v-if="linebreaks <= 28 || index !== 0"
+                                        class="!tw-h-12"
+                                    >
+                                        <th
+                                            v-for="(header, index) in headers"
+                                            :key="index"
+                                            :class="`tw-text-[12px] column !tw-font-bold !tw-text-black item-headers tw-text-${header.align}`"
+                                            :width="header.width || null"
+                                        >
+                                            {{ header.text }}
+                                        </th>
+                                    </tr>
+                                    <tbody>
+                                        <tr
+                                            v-for="(item, tindex) in items"
+                                            :key="tindex"
+                                            class="item-row no-border tw-align-top"
+                                        >
+                                            <td>
+                                                {{ padLeft(tindex + 1) }}
+                                            </td>
+                                            <td>
+                                                {{ item.quantity ?? item.qty }}
+                                            </td>
+                                            <td class="tw-uppercase">
+                                                {{ getUnitName(item) }}
+                                            </td>
+                                            <td
+                                                class="tw-text-sm tw-text-[13px]"
+                                            >
+                                                <strong v-if="item.user">
+                                                    {{
+                                                        item.user.full_name ??
+                                                        item?.name
+                                                    }}<br
+                                                /></strong>
+                                                <strong v-else>
+                                                    {{
+                                                        item?.details?.name ??
+                                                        '--'
+                                                    }}</strong
+                                                >
+                                            </td>
+                                            <td
+                                                class="!tw-text-right tw-text-[13px]"
+                                            >
+                                                {{ item.price }}
+                                                {{ currency }}
+                                            </td>
+                                            <td
+                                                class="!tw-text-right tw-text-[13px]"
+                                            >
+                                                {{ item.subtotal }}
+                                                {{ currency }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table
+                                    v-if="invoiceItems.length - 1 == index"
+                                    class="w-full tw-mt-5"
+                                >
+                                    <tbody>
+                                        <tr
+                                            class="tw-align-top tw-text-sm tw-text-center item-row no-border tw-underline tw-font-bold"
+                                        >
+                                            <td colspan="9" />
+                                            <td>
+                                                <div class="tw-text-right">
+                                                    {{
+                                                        $t(
+                                                            'invoices.labels.subtotal',
+                                                        )
+                                                    }}:
+                                                </div>
+                                            </td>
+                                            <td class="">
+                                                <div class="tw-text-right">
+                                                    {{
+                                                        number_format(
+                                                            invoice.subtotal,
+                                                            2,
+                                                            '.',
+                                                            ',',
+                                                        )
+                                                    }}
+                                                    {{ currency }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr
+                                            v-for="(tax, idx) in invoice.taxes"
+                                            v-show="
+                                                !invoice.visible ||
+                                                !invoice.manual_deductions
+                                                    .length
+                                            "
+                                            :key="idx"
+                                            class="tw-text-sm item-row no-border"
+                                        >
+                                            <td colspan="9" />
+                                            <td>
+                                                <div class="tw-text-right">
+                                                    {{ tax.name }}
+                                                    {{ `(${tax.rate}%)` }}:
+                                                </div>
+                                            </td>
+
+                                            <td class="!tw-text-right">
+                                                <div class="tw-text-right">
+                                                    {{ tax.amount }}
+                                                    {{ currency }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr
+                                            v-if="
+                                                !invoice.visible ||
+                                                !invoice.manual_deductions
+                                                    .length
+                                            "
+                                            class="tw-text-base item-row no-border"
+                                        >
+                                            <td colspan="9" />
+                                            <td
+                                                class="tw-capitalize tw-font-bold tw-underline"
+                                            >
+                                                <div
+                                                    class="tw-text-right tw-text-sm"
+                                                >
+                                                    {{
+                                                        $t(
+                                                            'invoices.labels.total',
+                                                        )
+                                                    }}:
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <div
+                                                    class="tw-font-bold tw-text-sm tw-underline tw-text-right no-border"
+                                                >
+                                                    {{ totalPrice }}
+                                                    {{ currency }}
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <DeductionsManualPreview
+                                            v-for="deduction in invoice.manual_deductions"
+                                            :key="deduction.created_at"
+                                            :deduction="deduction"
+                                            :symbol="currency"
+                                        />
+                                    </tbody>
+                                    <DeductionsPreview
+                                        v-for="(
+                                            deduction, dindex
+                                        ) in invoice.deductions"
+                                        :key="dindex"
+                                        :total-tax="deduction.total_taxes"
+                                        :total="deduction.total"
+                                        :subtotal="deduction.subtotal"
+                                        :symbol="currency"
+                                        :taxes="deduction.taxes"
+                                        :invoice="
+                                            deduction.kind_label +
+                                            ' - ' +
+                                            (deduction.external_id ??
+                                                deduction.internal_id)
+                                        "
+                                        :payment-date="deduction.payment_date"
+                                        :visible="
+                                            invoiceItems.length - 1 == index
+                                        "
+                                    />
+                                    <DeductionTotalPreview
+                                        :visible="invoice.visible"
+                                        :total="invoice.total_after_deduction"
+                                        :total-discount="invoice.total_discount"
+                                        :tax="invoice.tax"
+                                        :symbol="currency"
+                                        :tax-name="invoice.tax_name"
+                                        :deducted-subtotal="
+                                            invoice.subtotal_after_deduction
+                                        "
+                                        :subtotal="invoice.subtotal"
+                                    />
+                                </table>
+                            </div>
+                        </div>
+                        <!-- End of Invoice Items list table -->
+
+                        <!-- Company Invoice Details  -->
+                        <v-layout
+                            row
+                            wrap
+                            align-end
+                            class="!tw-flex-none no-break"
+                        >
+                            <v-flex
+                                v-if="
+                                    isNotNil(invoice.payment_date) &&
+                                    invoiceItems.length - 1 == index
+                                "
+                                xs12
+                                class="mt-2 tw-flex tw-gap-x-4 tw-text-sm"
+                            >
+                                <div class="tw-font-semibold">
+                                    {{ $t('invoices.labels.payment-date') }}:
+                                </div>
+                                <div>
+                                    {{ useDateFormat(invoice.payment_date) }}
+                                </div>
+                            </v-flex>
+                            <v-flex
+                                v-if="invoiceItems.length - 1 == index"
+                                xs12
+                                class="tw-text-xs"
+                            >
+                                <VTextarea
+                                    v-if="viewerCanEdit && notesInputIsFocused"
+                                    v-model="form.notes"
+                                    auto-grow
+                                    :flat="!notesInputIsFocused"
+                                    :loading="form.processing"
+                                    :disabled="form.processing"
+                                    :error-messages="form.errors.notes"
+                                    :hide-details="!form.errors.notes"
+                                    :placeholder="
+                                        $t('invoices.preview.add-notes')
+                                    "
+                                    solo
+                                    :class="[
+                                        'small invoice-subject-input no-margin-top !shadow-none tw-p-0 invoice-input',
+                                        {
+                                            'is-focused': notesInputIsFocused,
+                                            'is-not-focused':
+                                                !notesInputIsFocused,
+                                        },
+                                    ]"
+                                    @mouseleave="notesInputIsFocused = false"
+                                    @focus="notesInputIsFocused = true"
+                                    @blur="
+                                        () => {
+                                            notesInputIsFocused = false
+                                            updateSubjectOrDescription()
+                                        }
+                                    "
+                                />
+                                <div
+                                    v-else
+                                    class="tw-text-[12px] tw-whitespace-normal tw-min-h-5"
+                                    @mouseover="
+                                        viewerCanEdit
+                                            ? (notesInputIsFocused = true)
+                                            : null
+                                    "
+                                    @click.prevent="
+                                        viewerCanEdit
+                                            ? (notesInputIsFocused = true)
+                                            : null
+                                    "
+                                    v-html="notes"
+                                />
+                            </v-flex>
+                            <v-flex
+                                xs12
+                                class="tw-flex tw-text-xs"
+                            >
+                                <div>
+                                    {{ $t('invoices.preview.bank-details') }}:
+                                </div>
+                                <div class="ml-1">
+                                    {{
+                                        company?.invoice_defaults?.bank_name ??
+                                        '--'
+                                    }}
+                                </div>
+                            </v-flex>
+                            <v-flex
+                                xs4
+                                class="tw-flex tw-text-xs"
+                            >
+                                <div>{{ $t('invoices.preview.iban') }}:</div>
+                                <div class="ml-1">
+                                    {{
+                                        company?.invoice_defaults?.iban ?? '--'
+                                    }}
+                                </div>
+                            </v-flex>
+                            <v-flex
+                                xs4
+                                class="tw-flex tw-text-xs"
+                            >
+                                <div>
+                                    {{
+                                        $t(
+                                            'invoices.tax.labels.vat-identification-number',
+                                        )
+                                    }}:
+                                </div>
+                                <div class="ml-1">
+                                    {{
+                                        invoice?.company
+                                            ?.vat_identification_number ?? '--'
+                                    }}
+                                </div>
+                            </v-flex>
+
+                            <v-flex
+                                xs4
+                                class="tw-text-xs !tw-text-right"
+                            >
+                                <div v-if="hasManagingDirector">
+                                    {{
+                                        $t(
+                                            'invoices.preview.managing-director',
+                                        )
+                                    }}:
+                                </div>
+                            </v-flex>
+                            <v-flex
+                                xs4
+                                class="tw-flex tw-text-xs"
+                            >
+                                <div>{{ $t('invoices.preview.bic') }}:</div>
+                                <div class="ml-1">
+                                    {{ companyInvoiceDefaults?.bic ?? '--' }}
+                                </div>
+                            </v-flex>
+                            <v-flex
+                                xs4
+                                class="tw-flex tw-text-xs"
+                            >
+                                <div v-if="hasValidCommercialRegister">
+                                    {{
+                                        `${
+                                            companyInvoiceDefaults?.commercial_register
+                                        } ${$t(
+                                            'invoices.preview.commercial-register-number',
+                                        )}`
+                                    }}:
+                                </div>
+                                <div
+                                    v-if="hasValidCommercialRegister"
+                                    class="ml-1"
+                                >
+                                    {{
+                                        companyInvoiceDefaults?.commercial_register_number ??
+                                        '--'
+                                    }}
+                                </div>
+                            </v-flex>
+                            <v-flex
+                                xs4
+                                class="tw-text-xs tw-text-right"
+                            >
+                                <div v-if="hasManagingDirector">
+                                    {{
+                                        companyInvoiceDefaults
+                                            ?.managing_director?.name
+                                    }}
+                                </div>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-sheet>
+            </v-flex>
+        </v-container>
+    </div>
+</template>

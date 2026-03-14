@@ -1,0 +1,25 @@
+{
+    "name": "sowidu/data",
+    "description": "Database driven data loader and manager",
+    "version": "1.x-dev",
+    "require": {
+        "php": "^7.3|^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Packages\\Data\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Packages\\Data\\DataServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

@@ -1,0 +1,150 @@
+---
+alwaysApply: true
+---
+# Action Class Standards
+
+Action classes in this codebase must follow strict patterns for consistency, reusability, and maintainability.
+
+## Required Structure
+
+### 1. Interface Implementation
+- **MUST** implement a corresponding interface from `app/Contracts/Actions/` or `app/Contracts/*/Actions/`
+- Interface should define the public method signature with proper type hints
+- Example: `class GenerateInvoicePdfAction implements GeneratesInvoicePdfContract`
+
+### 2. Method Signature Requirements
+- **MUST** accept `$teamId` parameter (nullable) for team context
+- **MUST** accept `$errorBag` parameter (nullable) for validation error handling
+- **MUST NOT** return HTTP responses - return data/models instead
+- **MUST** be simple and reusable across different contexts
+
+### 3. Standard Method Pattern
+```php
+public function methodName($user, $primaryParam, $teamId = null, $errorBag = null)
+{
+    // Authorization logic
+    // Validation logic
+    // Business logic
+    // Return data/model (not HTTP response)
+}
+```
+
+## Examples
+
+### Good Action Class
+```php
+<?php
+
+namespace App\Actions\Invoice;
+
+use App\Contracts\Actions\GeneratesInvoicePdfContract;
+use App\Models\User;
+use App\Models\Invoice;
+
+class GenerateInvoicePdfAction implements GeneratesInvoicePdfContract
+{
+    public function generate($user, Invoice $invoice, $teamId = null, $errorBag = null): string
+    {
+        // Authorization
+        $this->authorizeForUser($user, 'view', [$invoice, $teamId]);
+
+        // Business logic
+        $pdfView = InvoicePdfFactory::make($invoice);
+        $tempPath = $this->pathGenerator->getTempPath($pdfView);
+
+        // Return file path (not HTTP response)
+        return $finalPath;
+    }
+}
+```
+
+### Good Interface
+```php
+<?php
+
+namespace App\Contracts\Actions;
+
+use App\Models\User;
+use App\Models\Invoice;
+
+interface GeneratesInvoicePdfContract
+{
+    public function generate($user, Invoice $invoice, $teamId = null, $errorBag = null): string;
+}
+```
+
+## Anti-Patterns to Avoid
+
+### ❌ Don't Return HTTP Responses
+```php
+// BAD - Returns HTTP response
+public function create($user, $data, $teamId = null, $errorBag = null)
+{
+    return response()->json(['success' => true]);
+}
+```
+
+### ❌ Don't Skip Required Parameters
+```php
+// BAD - Missing teamId and errorBag
+public function create($user, $data)
+{
+    // Missing team context and error handling
+}
+```
+
+### ❌ Don't Skip Interface Implementation
+```php
+// BAD - No interface
+class CreateUserAction
+{
+    public function create($user, $data, $teamId = null, $errorBag = null)
+    {
+        // Should implement an interface
+    }
+}
+```
+
+## Validation and Error Handling
+
+- Use `$errorBag` parameter for validation error context
+- Validate team ownership when `$teamId` is provided
+- Use appropriate validation rules for team context
+- Example: `'team_id' => ['nullable', 'exists:companies,id']`
+
+## Authorization
+
+- Always check user permissions for the action
+- Consider team context when `$teamId` is provided
+- **In modules**: Use `AuthorizationContract` instead of direct `Gate` calls
+- **In main app**: Use Gates or Policies as appropriate
+- Example: `$this->authorization->authorize($user, 'create', $resource)`
+
+## Traits
+
+- Use `AsAction` trait for static convenience methods
+- Provides `make()`, `run()`, `runIf()`, `runUnless()` methods
+- Enables dependency injection and conditional execution
+
+## Naming Conventions
+
+- Action classes: `{Verb}{Noun}Action` (e.g., `GenerateInvoicePdfAction`)
+- Interfaces: `{Verb}{Noun}Contract` (e.g., `GeneratesInvoicePdfContract`)
+- Methods: Use descriptive verbs (create, update, delete, generate, etc.)
+
+## External Dependencies (Module Actions)
+
+When creating actions inside modules (`modules/{name}/src/Actions/`):
+
+- **NEVER** import `App\Models\*` or `App\Services\*` directly
+- **ALWAYS** define external contracts in `modules/{name}/src/Contracts/External/`
+- **ALWAYS** inject contracts via constructor
+- **ALWAYS** implement adapters in main app (`app/Services/{Name}/`)
+
+See: `.cursor/rules/module-organization.mdc` for complete external contract pattern.
+
+## Related Rules
+
+- Module Organization: `.cursor/rules/module-organization.mdc`
+- Documentation: `.cursor/rules/documentation-organization.mdc`
+- File Naming: `.cursor/rules/file-naming-conventions.mdc`

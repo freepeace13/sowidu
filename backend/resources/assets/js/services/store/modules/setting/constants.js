@@ -1,0 +1,2 @@
+export const SET_PERMISSIONS = 'SET_PERMISSIONS';
+export const SET_ROLES = 'SET_ROLES';

@@ -1,0 +1,53 @@
+name: CD-Prod
+
+on:
+  push:
+    branches: [main] # branch where to watch changes/PR/commits
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PUSH_TOKEN }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22.8.0'
+
+      - run: cp env.prod .env
+      - run: npm install
+      - run: npm run production
+
+      - name: Commit built assets
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git checkout -B prod-deploy
+          git add -f public/
+          git commit -m "Build front-end assets" --no-verify
+          git push -f origin prod-deploy
+
+      - name: Deploy to production server
+        uses: appleboy/ssh-action@master
+        with:
+          username: sowidu-dev
+          host: sowidu.de
+          port: 2222
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: 'cd /home/sowidu-dev/sites/sowidu.de && ./server_deploy_prod.sh'
+
+  notify:
+    needs: deploy  # Runs after deploy job
+    if: always()
+    uses: ./.github/workflows/notify-deployment.yml
+    with:
+      environment: 'production'
+      deployment_status: ${{ needs.deploy.result }}
+      github_compare: ${{ github.event.compare }}
+    secrets:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}

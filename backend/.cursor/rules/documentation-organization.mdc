@@ -1,0 +1,106 @@
+---
+alwaysApply: true
+---
+# Documentation Organization
+
+When creating or updating documentation, ALWAYS follow these placement rules based on scope.
+
+## Documentation Placement Rules
+
+### Module-Specific Documentation
+**Location**: `modules/{module-name}/docs/`
+
+**What belongs here**:
+- Module architecture and design patterns
+- Module features and capabilities
+- API documentation for module endpoints
+- Module-specific testing guides
+- Internal module workflows
+- Module configuration options
+
+**Examples**:
+- `modules/chatly/docs/architecture.md`
+- `modules/chatly/docs/api.md`
+- `modules/chatly/docs/testing-guide.md`
+
+### Main App Integration Documentation
+**Location**: `docs/{module-name}/`
+
+**What belongs here**:
+- Service provider registration and setup
+- Adapter implementations (in main app)
+- Integration steps with main application
+- Main app configuration for the module
+- Troubleshooting integration issues
+
+**Examples**:
+- `docs/chatly/setup.md`
+- `docs/chatly/adapters-implementation.md`
+- `docs/offer/integration.md`
+
+### Cross-Cutting Documentation
+**Location**: `docs/`
+
+**What belongs here**:
+- Project-wide standards and conventions
+- Overall architecture decisions
+- Cross-module patterns
+- General development guidelines
+- Project setup and onboarding
+
+**Examples**:
+- `docs/DOCUMENTATION_GUIDELINES.md`
+- `docs/directory-structure.md`
+- `docs/CONTRIBUTING.md`
+
+### Service Documentation
+**Location**: `app/{Service}/README.md`
+
+**What belongs here**:
+- Service-specific implementation details
+- Adapter class documentation
+- Helper utilities specific to the service
+
+**Examples**:
+- `app/Services/Chat/README.md`
+- `app/Repositories/README.md`
+
+## File Naming Conventions
+
+- Documentation files: `kebab-case.md`
+- Index files: `README.md` or `module-guide.md`
+- Guidelines files: `UPPERCASE-WITH-DASHES.md`
+
+**Examples**:
+- ✅ `integration-guide.md`
+- ✅ `testing-guide.md`
+- ✅ `external-contracts.md`
+- ❌ `IntegrationGuide.md`
+- ❌ `Testing_Guide.md`
+
+## Index Files
+
+Each `docs/` directory SHOULD have an index file:
+- Module docs: `module-guide.md` or `README.md`
+- Integration docs: `README.md`
+- Service docs: `README.md`
+
+Index files should:
+- List all documentation in the directory
+- Provide quick navigation links
+- Link to related documentation
+- Explain the scope of the documentation
+
+## Best Practices
+
+1. **Always check** for existing documentation before creating new files
+2. **Always update** index/README files when adding new documentation
+3. **Always cross-reference** related documentation
+4. **Never** create documentation in project root unless it's cross-cutting
+5. **Never** duplicate documentation - link to existing docs instead
+
+## Complete Reference
+
+For complete documentation organization rules, see:
+- `docs/DOCUMENTATION_GUIDELINES.md` - Full documentation guide
+- `modules/chatly/agents.md` - Module-specific guidelines

@@ -1,0 +1,28 @@
+{
+    "name": "sowidu/addressable",
+    "description": "Database driven contactships loader and manager",
+    "version": "1.x-dev",
+    "require": {
+        "php": "^7.3|^8.1",
+        "illuminate/support": "^9.19",
+        "illuminate/database": "^9.19",
+        "pragmarx/countries": "^0.8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Packages\\Addressable\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Packages\\Addressable\\AddressServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

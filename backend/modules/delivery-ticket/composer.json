@@ -1,0 +1,33 @@
+{
+    "name": "sowidu/delivery-ticket",
+    "description": "Delivery Ticket Module for Laravel",
+    "version": "1.x-dev",
+    "require": {
+        "php": "^8.0",
+        "sowidu/shared": "1.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\DeliveryTicket\\": "src/",
+            "Modules\\DeliveryTicket\\Database\\Factories\\": "database/factories/",
+            "Modules\\DeliveryTicket\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\DeliveryTicket\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\DeliveryTicket\\Providers\\DeliveryTicketServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

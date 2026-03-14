@@ -1,0 +1,429 @@
+.tw-text-base {
+    font-size: 14px;
+}
+
+.tw-text-xs {
+    font-size: 10.5px;
+}
+
+.tw-font-semibold {
+    font-weight: 600;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.tw-text-sm {
+    font-size: 14px;
+}
+
+.text-13 {
+    font-size: 13px;
+}
+
+.tw-uppercase {
+    text-transform: uppercase;
+}
+
+.ml-1 {
+    margin-left: 4px !important;
+}
+
+.tw-text-right {
+    text-align: right !important;
+}
+
+.tw-invisible {
+    display: none;
+}
+
+.preview-sheet {
+    background-color: #ffffff;
+
+    .v-label {
+        @apply tw-text-sm;
+    }
+
+    .double-underline {
+        border-top: 3px double #000;
+    }
+
+    .single-border {
+        border-top: 1px solid #000;
+    }
+
+    .blank {
+        &.tw-h-7 {
+            height: 28px;
+        }
+    }
+
+    .subject-and-description {
+        font-size: 14px;
+
+        .subject {
+            margin-top: 8px;
+        }
+
+        .description {
+            font-size: 12px;
+            line-height: 18px;
+        }
+    }
+
+    .invoice-preview-information {
+        margin-top: 30px;
+
+        .main {
+            .invoice-id {
+                float: left;
+                width: 33.3%;
+                margin-right: 14px;
+            }
+
+            .order-number-date {
+                width: 100%;
+            }
+
+            .order-number {
+                float: left;
+            }
+
+            .invoice-date {
+                float: right;
+                font-size: 14px;
+
+                .tw-font-normal {
+                    text-align: right;
+                }
+            }
+
+            &:after {
+                content: '';
+                display: table;
+                clear: both;
+            }
+        }
+
+        .construction-site {
+            margin-top: 10.5px;
+
+            :first-child {
+                float: left;
+                width: 117px;
+            }
+
+            &:after {
+                content: '';
+                display: table;
+                clear: both;
+            }
+        }
+
+        .execution-period {
+            .flex.xs2 {
+                float: left;
+                width: 117px;
+            }
+
+            .flex.xs6 {
+                :first-child {
+                    float: left;
+                }
+
+                :nth-child(2) {
+                    float: left;
+                    margin-left: 5px;
+                    margin-right: 5px;
+                }
+
+                :nth-child(3) {
+                    float: left;
+                }
+            }
+
+            &:after {
+                content: '';
+                display: table;
+                clear: both;
+            }
+        }
+
+        .service-recipient {
+            :first-child {
+                float: left;
+                width: 117px;
+            }
+
+            &:after {
+                content: '';
+                display: table;
+                clear: both;
+            }
+        }
+    }
+
+    .invoice-items {
+        .invoice-items-table {
+            width: 100%;
+
+            thead tr {
+                @apply !tw-border-b-0;
+            }
+
+            tr {
+                &.no-border {
+                    @apply !tw-border-t-0;
+                }
+            }
+
+            .line-items-table {
+                width: 100%;
+                font-size: 14px;
+                border: none !important;
+
+                .item-headers {
+                    text-align: left;
+                    height: 40px;
+
+                    &.tw-text-center {
+                        text-align: center;
+                    }
+                }
+
+                .tw-h-12 {
+                    height: 48px;
+                }
+
+                margin-top: 20px;
+
+                tbody {
+                    tr {
+                        th {
+                            font-size: 12px;
+                            font-weight: 700;
+                        }
+
+                        .blank {
+                            height: 17.5px;
+                        }
+                    }
+                }
+
+                .item-row {
+                    height: auto;
+
+                    td {
+                        &:last-child {
+                            text-align: center;
+                        }
+
+                        &:nth-child(5) {
+                            text-align: center;
+                        }
+                    }
+
+                    .price-per-unit {
+                        margin-right: 24px;
+                    }
+                }
+
+                .invoice-totals-group {
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                    border: 0;
+                    padding: 0;
+                    line-height: 13px;
+
+                    table {
+                        width: 100%;
+                    }
+
+                    .blank {
+                        height: 12.5px;
+                    }
+
+                    .summary-row {
+                        font-size: 13px;
+                        line-height: 13px;
+
+                        .prefix {
+                            font-size: 13px;
+                            line-height: 13px;
+                        }
+
+                        .amount-cell {
+                            text-align: right;
+                            padding-right: 0px;
+                        }
+
+                        .amount {
+                            font-size: 13px;
+                            margin-top: -3px;
+                            line-height: 13px;
+                        }
+
+                        .label {
+                            font-size: 13px;
+                            line-height: 13px;
+                            white-space: nowrap;
+                            text-align: right;
+                            white-space: nowrap;
+
+                            .prefix {
+                                float: left;
+                            }
+
+                            &:after {
+                                content: '';
+                                display: table;
+                                clear: both;
+                            }
+                        }
+
+                        .w-125 {
+                            width: 125px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.invoice-header {
+    .payer {
+        float: left;
+
+        .address {
+            font-size: 8px;
+            line-height: 24.5px;
+
+            div {
+                float: left;
+            }
+
+            &:nth-child(2) {
+                margin-left: 4px;
+                float: right;
+            }
+
+            &:after {
+                content: '';
+                display: table;
+                clear: both;
+            }
+        }
+    }
+
+    .contractor {
+        float: right;
+        max-width: 73mm;
+        max-height: 40mm;
+
+        .contractor-logo-container {
+            margin-bottom: 5px;
+            .contractor-logo {
+                object-fit: contain;
+                max-height: 85px;
+                width: auto;
+                height: auto;
+            }
+        }
+
+        .contractor-contact-info {
+            font-size: 10px;
+
+            span {
+                border-bottom: 1px solid currentColor;
+                padding-bottom: 3px;
+            }
+        }
+    }
+
+    &:after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+
+    .invoice-kind {
+        margin-top: 40px;
+    }
+}
+
+.invoice-notes {
+    .payment-date {
+        display: block;
+        font-size: 12.25px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+
+        div {
+            display: inline-block;
+        }
+    }
+
+    .total-wage {
+        font-size: 12.25px;
+        display: block;
+        margin-bottom: 8px;
+
+        div {
+            display: inline-block;
+        }
+    }
+
+    .notes {
+        font-size: 12px;
+    }
+}
+
+.invoice-footer {
+    .invoice-footer-container {
+        margin-bottom: 0px;
+        font-size: 10.5px !important;
+        width: 100%;
+
+        div {
+            font-size: 10.5px !important;
+        }
+
+        .iban-bic,
+        .vat-hra,
+        .managing-director {
+            display: inline-block;
+            width: 33%;
+        }
+
+        .bank-name {
+            margin-top: 4px;
+            padding-bottom: 8px;
+            width: 100%;
+
+            div {
+                display: inline-block;
+            }
+        }
+
+        .iban,
+        .bic,
+        .vat,
+        .hra {
+            margin-top: 4px;
+
+            div {
+                display: inline-block;
+            }
+        }
+
+        .managing-director {
+            text-align: right;
+
+            div {
+                margin-top: 5px;
+            }
+        }
+    }
+}

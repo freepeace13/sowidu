@@ -1,0 +1,17 @@
+<?php
+
+namespace Modules\Todos\Transformers;
+
+use Packages\Urn\UrnManager;
+
+trait WithUrnAttribute
+{
+    public function withURN()
+    {
+        return $this->state(function () {
+            return [
+                'urn' => UrnManager::generate($this->resource),
+            ];
+        });
+    }
+}

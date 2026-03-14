@@ -1,0 +1,26 @@
+.headline {
+  font-weight: 100 !important;
+  font-size: 16px !important;
+}
+
+.btn {
+  font-weight: 100 !important;
+  font-size: 12px !important;
+}
+
+.dashboardCard {
+  height: 120px !important;
+  width: 280px !important;
+  padding: 5px !important;
+  margin-bottom:17px;
+}
+
+.dashboardCardPurple {
+  background: #7b1fa2;
+  background: linear-gradient(110deg, #7b1fa200 0%, #7c4dff1f 100%);
+}
+
+.dashboardCardCyan {
+  background: #0288d1;
+  background: linear-gradient(110deg, #0288d100 0%, #26c6da3b 100%);
+}

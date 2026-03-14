@@ -1,0 +1,13 @@
+<?php
+
+namespace {{ namespace }};
+
+use Packages\ActiveStatus\Middleware;
+
+class {{ class }} extends Middleware
+{
+    protected function user($request)
+    {
+        //
+    }
+}

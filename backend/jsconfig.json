@@ -1,0 +1,115 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
+        "baseUrl": "./",
+        "checkJs": false,
+        "paths": {
+            "~/*": [
+                "./"
+            ],
+            "@/*": [
+                "./resources/js/*"
+            ],
+            "@components/*": [
+                "./resources/js/Components/*"
+            ],
+            "~Invoicify/*": [
+                "./modules/invoicify/resources/js/*"
+            ],
+            "~Shared/*": [
+                "./modules/shared/resources/js/*"
+            ],
+            "@Offer/*": [
+                "./app/Modules/Offer/resources/js/*"
+            ],
+            "@Invoice/*": [
+                "./app/Modules/Invoice/resources/js/*"
+            ]
+        },
+        "module": "ESNext",
+        "target": "ESNext",
+        "resolveJsonModule": false,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strict": true,
+        "useDefineForClassFields": true,
+        "jsx": "preserve",
+        "moduleResolution": "node",
+        "types": [
+            "vue",
+            "vuetify",
+            "vite/client",
+            "@inertiajs/vue2",
+            "vuetify2-component-types"
+        ],
+        "noErrorTruncation": true
+    },
+    "vueCompilerOptions": {
+        "extensions": [".vue"],
+        "experimentalModelPropName": {
+            "input-value": {
+                "v-checkbox": true,
+                "v-switch": true,
+                "v-chip": true,
+                "v-btn": true,
+                "v-list-item": true,
+                "v-bottom-navigation": true
+            },
+            "": {
+                "input": true
+            },
+            "value": {
+                "input": {
+                    "type": "text"
+                },
+                "textarea": true,
+                "select": true
+            }
+        }
+        //     "target": 2.7,
+    },
+    "exclude": [
+        "node_modules",
+        "public/**/*",
+        "vendor",
+        "resources/assets/**/*"
+    ],
+    "include": [
+        "./resources/js/**/*",
+        "./resources/js/**/*.vue",
+        "./resources/js/**/*.d.ts",
+
+        "./modules/**/resources/js/**/*",
+        "./modules/**/resources/js/**/*.vue",
+        "./modules/**/resources/js/**/*.d.ts",
+
+        // @todo - below soon to be removed
+        "./app/Modules/**/resources/js/**/*",
+        "./app/Modules/**/resources/css/**/*",
+        "./app/Modules/**/resources/js/**/*.vue",
+        "./app/Modules/**/resources/js/**/*.d.ts",
+
+        "./modules/**/resources/js/**/*.vue",
+        "./modules/**/resources/js/**/*.js",
+        "./modules/**/resources/js/**/*.d.ts"
+    ],
+    "typeAcquisition": {
+        "include": [
+            "vue",
+            "vuetify",
+            "vite/client",
+            "dayjs",
+            "moment",
+            "@vueuse/core",
+            "@inertiajs/vue2",
+            "@inertiajs/vue3",
+            "@inertiajs/inertia",
+            "lodash",
+            "vuetify2-component-types"
+        ]
+    }
+}

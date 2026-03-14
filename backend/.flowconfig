@@ -1,0 +1,18 @@
+[ignore]
+
+[untyped]
+.*/node_modules/.*
+.*/vendor/.*
+
+[include]
+
+[libs]
+resources/assets/js/flow
+
+[options]
+module.file_ext=.js
+module.file_ext=.vue
+module.name_mapper='^~\/\(.*\)$' -> '<PROJECT_ROOT>/resources/assets/js/\1'
+module.name_mapper='^@libs\/\(.*\)$' -> '<PROJECT_ROOT>/resources/assets/js/libs/\1'
+module.name_mapper='^@features\/\(.*\)$' -> '<PROJECT_ROOT>/resources/assets/js/features/\1'
+module.name_mapper='^@common\/\(.*\)$' -> '<PROJECT_ROOT>/resources/assets/js/common/\1'

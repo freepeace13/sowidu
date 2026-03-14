@@ -1,0 +1,27 @@
+{
+    "name": "sowidu/countries",
+    "description": "Countries package for Laravel",
+    "version": "1.x-dev",
+    "require": {
+        "php": "^7.3|^8.0",
+        "pragmarx/countries": "0.8.2",
+        "illuminate/support": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Packages\\Countries\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Packages\\Countries\\CountriesServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

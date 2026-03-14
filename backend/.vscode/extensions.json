@@ -1,0 +1,15 @@
+{
+    "recommendations": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "christian-kohler.path-intellisense",
+        "christian-kohler.npm-intellisense",
+        "mehedidracula.php-namespace-resolver",
+        "bradlc.vscode-tailwindcss",
+        "devsense.phptools-vscode",
+        "devsense.composer-php-vscode",
+        "ms-vscode.vscode-typescript-next",
+        "vue.volar",
+        "hediet.vscode-drawio"
+    ]
+}

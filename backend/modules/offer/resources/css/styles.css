@@ -1,0 +1,21 @@
+@import '@/../css/fonts.css';
+
+@import 'vue-directive-tooltip/dist/vueDirectiveTooltip.css';
+@import './tailwind.css';
+
+@import 'vuetify/dist/vuetify.min.css';
+
+@import '@/../css/utilities.css';
+@import '@/../css/vuetify-custom.css';
+
+.invoice-input .v-input__slot {
+    padding: 0 5px !important;
+}
+
+@layer base {
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}

@@ -1,0 +1,61 @@
+<?php
+
+return [
+    'no-boards-for-now' => 'No boards for now',
+    'we-didnt-find-anything-for' => 'We didn\'t find anything for :keyword',
+    'select-or-search-for-city' => 'Select or search for City',
+    'select-or-search-for-state' => 'Select or search for State',
+    'start-typing-to-search-country' => 'Start typing to search Country',
+    'search-for-people' => 'Search for people',
+    'type-address-here' => 'Type address here...',
+    'add-a-category' => 'Add a category',
+    'new-password' => 'Enter a new password and confirm',
+    'reset-password-link' => 'We will send reset password link to your email address',
+    'please-login-into-your-account' => 'Please, login into your account',
+    'notification-empty' => 'No notification(s)',
+    'invite-message-to-user' => '(optional) Tell something to the user...',
+    'select-role' => 'Select role',
+    'search-username-fullname-or-email' => 'Search by username, full name, or email address',
+    'tell-us-about-your-organization' => 'Tell us about your organization',
+    'setup-your-organization' => 'Setup your organization',
+    'quick-search' => 'Quick search',
+    'tell-something-about-this-task' => '(Optional) Tell something about this task...',
+    'choose-from-addressbook' => 'Choose from addressbook',
+    'choose-contractor' => 'Choose contractor',
+    'enter-verification-code' => 'Enter verification code',
+    'not-available' => 'Not Available',
+    'add-people' => 'Add people',
+    'set-your-password' => 'Set your password',
+    'keyword' => 'Keyword',
+    'add_another_group' => 'Add another group',
+    'select-color' => 'Select color',
+    'click-to-attach-label-to-this-task.' => 'Click to attach label to this task.',
+    'person-add' => 'Person add',
+    'no-results-match' => 'No results matching',
+    'nothing-found' => 'Nothing found.',
+    'enter-keyword' => 'Enter a keyword...',
+    'not-set' => 'Not Set',
+    'no-results-matching' => 'No results matching ":keyword."',
+
+    'auth' => [
+        'resend-verification' => 'If you have not receive any email within 5 minutes you can resend a new code.',
+    ],
+
+    'inputs' => [
+        'email-username-or-phone' => 'Tap the icon to toggle phone, email or username',
+        'choose-company' => 'Choose company',
+        'login-me-immediately' => 'Log me in immediately once created',
+        'terms-agreement' => 'I hereby agree to Trade of Terms',
+    ],
+
+    'status' => [
+        'pending' => 'Waiting to process',
+        'ongoing' => 'Started to process',
+        'unconfirmed' => 'Waiting for confirmation',
+        'drafts' => 'Order is not yet published',
+        'done' => 'Successfully completed orders',
+        'cancelled' => 'Cancelled Orders',
+    ],
+
+    'edit' => 'Edit',
+];

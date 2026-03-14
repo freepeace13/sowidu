@@ -1,0 +1,40 @@
+.v-toolbar-search-field {
+    /deep/.v-input__slot {
+        min-height: initial;
+    }
+}
+
+.company-list {
+    padding: 10px;
+    max-height: 350px;
+    overflow: auto;
+    border-bottom: 1px solid #777;
+
+    .v-list {
+        > div:not(:last-child) {
+            > .v-list__tile {
+                border-bottom: 1px solid #777;
+            }
+        }
+    }
+}
+
+.notification-panel {
+    max-height: 346px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .notification-item {
+        cursor: pointer;
+        border-bottom: 1px solid #777;
+    }
+}
+
+.shortcut-item {
+    /deep/ a {
+        text-decoration: none !important;
+    }
+    * {
+        color: #fff;
+    }
+}

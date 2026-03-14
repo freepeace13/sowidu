@@ -1,0 +1,3 @@
+export const SET_CONTACTS = 'SET_CONTACTS';
+export const INSERT_CONTACT = 'INSERT_CONTACT';
+export const CONTACT_UPDATE = 'CONTACT_UPDATE';

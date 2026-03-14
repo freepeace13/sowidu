@@ -1,0 +1,19 @@
+#notifications {
+    /deep/ .v-snack--multi-line .v-snack__content {
+        height: 100px;
+    }
+
+    /deep/ .v-snack > .v-snack__wrapper {
+        max-width: 450px;
+        min-width: 450px;
+
+        & > .v-snack__content {
+            padding: 0px;
+
+            & > .v-list {
+                width: 100%;
+                background: transparent;
+            }
+        }
+    }
+}

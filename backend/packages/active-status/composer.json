@@ -1,0 +1,29 @@
+{
+    "name": "sowidu/active-status",
+    "description": "Database driven contactships loader and manager",
+    "version": "1.x-dev",
+    "require": {
+        "php": "^7.3|^8.1",
+        "illuminate/http": "^9.19",
+        "illuminate/support": "^9.19",
+        "illuminate/contracts": "^9.19",
+        "illuminate/database": "^9.19"
+    },
+    "autoload": {
+        "psr-4": {
+            "Packages\\ActiveStatus\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Packages\\ActiveStatus\\ActiveStatusServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

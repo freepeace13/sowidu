@@ -1,0 +1,147 @@
+name: Notify Deployment
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+        description: 'Environment name (staging/production)'
+      deployment_status:
+        required: true
+        type: string
+        description: 'Status of the deployment (success/failure)'
+      github_compare:
+        required: true
+        type: string
+        description: 'GitHub compare URL'
+    secrets:
+      DISCORD_WEBHOOK:
+        required: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get Commit Information
+        id: commit-info
+        run: |
+          # Get the commit message, author, and timestamp
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+          COMMIT_SHA=$(git rev-parse --short HEAD)
+          COMMIT_FULL_SHA=$(git rev-parse HEAD)
+          COMMIT_DATE=$(git log -1 --pretty=%cd --date=format:'%Y-%m-%d %H:%M:%S')
+
+          # Get changed files with their status (limit to 3)
+          CHANGED_FILES=$(git diff --name-status HEAD^ HEAD | head -n 3 | awk '{print $1 " " $2}')
+
+          # Get total number of changed files
+          TOTAL_CHANGED=$(git diff --name-status HEAD^ HEAD | wc -l)
+
+          # Get PR number if this is a PR merge
+          PR_NUMBER=$(echo "$COMMIT_MSG" | grep -oP 'Merge pull request #\K\d+' || echo "")
+
+          # Store the information for the next step
+          echo "commit_message<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          echo "commit_author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+          echo "commit_sha=$COMMIT_SHA" >> $GITHUB_OUTPUT
+          echo "commit_full_sha=$COMMIT_FULL_SHA" >> $GITHUB_OUTPUT
+          echo "commit_date=$COMMIT_DATE" >> $GITHUB_OUTPUT
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "total_changed=$TOTAL_CHANGED" >> $GITHUB_OUTPUT
+          echo "changed_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Notify Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          GITHUB_REPO: ${{ github.repository }}
+          GITHUB_BRANCH: ${{ github.ref_name }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          ENVIRONMENT: ${{ inputs.environment }}
+          DEPLOYMENT_STATUS: ${{ inputs.deployment_status }}
+          GITHUB_COMPARE: ${{ inputs.github_compare }}
+          COMMIT_MSG: ${{ steps.commit-info.outputs.commit_message }}
+          COMMIT_AUTHOR: ${{ steps.commit-info.outputs.commit_author }}
+          COMMIT_SHA: ${{ steps.commit-info.outputs.commit_sha }}
+          COMMIT_FULL_SHA: ${{ steps.commit-info.outputs.commit_full_sha }}
+          COMMIT_DATE: ${{ steps.commit-info.outputs.commit_date }}
+          PR_NUMBER: ${{ steps.commit-info.outputs.pr_number }}
+          TOTAL_CHANGED: ${{ steps.commit-info.outputs.total_changed }}
+          CHANGED_FILES: ${{ steps.commit-info.outputs.changed_files }}
+        run: |
+          if [ "$DEPLOYMENT_STATUS" == "success" ]; then
+            MESSAGE="**🚀 Deployment to $ENVIRONMENT completed!** ✅"
+            COLOR=5763719
+          else
+            MESSAGE="**❌ Deployment to $ENVIRONMENT failed!**"
+            COLOR=15548997
+          fi
+
+          FORMATTED_FILES=$(echo "$CHANGED_FILES" | while read -r status file; do
+            case $status in
+              A) echo "- ✨ Added: $file" ;;
+              M) echo "- 📝 Modified: $file" ;;
+              D) echo "- 🗑️ Deleted: $file" ;;
+              R) echo "- 🔄 Renamed: $file" ;;
+              *) echo "- $file" ;;
+            esac
+          done)
+
+          if [ "$TOTAL_CHANGED" -gt 3 ]; then
+            REMAINING=$((TOTAL_CHANGED - 3))
+            FORMATTED_FILES="$FORMATTED_FILES\n- 📁 ... and $REMAINING more files"
+          fi
+
+          PR_INFO=""
+          if [ -n "$PR_NUMBER" ]; then
+            PR_INFO="**PR #$PR_NUMBER**"
+          fi
+
+          COMMIT_URL="https://github.com/$GITHUB_REPO/commit/$COMMIT_FULL_SHA"
+          COMMIT_FIELD="**[$COMMIT_SHA]($COMMIT_URL)** by $COMMIT_AUTHOR\n📅 $COMMIT_DATE\n$PR_INFO"
+
+          # Use jq to safely encode all fields
+          jq -n \
+            --arg username "GitHub Actions" \
+            --arg title "$MESSAGE" \
+            --argjson color "$COLOR" \
+            --arg repo "$GITHUB_REPO" \
+            --arg branch "$GITHUB_BRANCH" \
+            --arg actor "$GITHUB_ACTOR" \
+            --arg status "**$DEPLOYMENT_STATUS**" \
+            --arg commit "$COMMIT_FIELD" \
+            --arg msg "$COMMIT_MSG" \
+            --arg files "$FORMATTED_FILES" \
+            --arg compare "$GITHUB_COMPARE" \
+            '{
+              username: $username,
+              embeds: [{
+                title: $title,
+                color: $color,
+                fields: [
+                  {name: "📝 Repository", value: $repo, inline: true},
+                  {name: "🔀 Branch", value: $branch, inline: true},
+                  {name: "👤 Deployed by", value: $actor, inline: true},
+                  {name: "📌 Status", value: $status, inline: true},
+                  {name: "🔨 Commit", value: $commit, inline: false},
+                  {name: "💬 Commit Message", value: $msg, inline: false},
+                  {name: "📄 Changed Files", value: $files, inline: false},
+                  {name: "🔗 View Changes", value: $compare, inline: false}
+                ]
+              }]
+            }' > payload.json
+
+          curl -H "Content-Type: application/json" \
+              -X POST \
+              -d @payload.json \
+              "$DISCORD_WEBHOOK"

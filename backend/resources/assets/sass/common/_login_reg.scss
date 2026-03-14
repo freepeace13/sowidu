@@ -1,0 +1,151 @@
+body{
+  background-color: rgb(20, 20, 20) !important;
+}
+
+.loginForm {
+  padding: 40px;
+}
+
+.loginForm {
+  
+  .v-btn__content{
+    font-weight:500 !important;
+  }
+  
+  .v-btn--flat{
+    text-decoration: none;
+  }
+
+  .forgotPW {
+    font-weight: 100;
+    font-size: 10px;
+    position: relative;
+    top: -51px;
+    left: 110px;
+    color: #777;
+    text-decoration: none !important;
+  }
+
+  .loginTitle {
+    font-weight: 100;
+    font-size: 28px;
+    margin-top: 14px;
+    margin-left: -8px;
+  }
+  
+  .loginSubTitle {
+    font-weight: 100;
+    font-size: 20px;
+    margin-top: 14px;
+    margin-left: -6px;
+  }
+
+  a:hover{
+    text-decoration: none !important;
+  }
+
+}
+
+.regForm {
+  padding: 40px;
+}
+
+.resetForm {
+  padding: 40px;
+  width: 500px;
+}
+.resetForm {
+  form{
+    p{
+      font-size:14px !important;
+      color:#fff !important;
+    }
+  }
+  a:hover{
+    text-decoration:none !important;
+  }
+  .v-label{
+    font-size:16px !important;
+    color: rgba(255,255,255,0.7);
+  }
+  .v-btn{ 
+    .v-btn__content{
+      font-size:14px !important;
+      font-weight:500 !important;
+      color: #fff !important;
+    }
+  }
+}
+
+.gradient-45deg-black-grey {
+  background: linear-gradient(45deg, #151515 0%, #302f2f 100%) !important;
+}
+
+.gradient-45deg-light-blue-cyan {
+  background: linear-gradient(45deg, #0288d1 0%, #26c6da 100%) !important;
+}
+
+.title {
+  font-weight: 100;
+}
+
+.label {
+  font-weight: 100;
+}
+
+
+.btn {
+  font-weight: 100 !important;
+  font-size: 10px !important;
+}
+
+.background {
+  background-color: #141414 !important;
+}
+
+.input-group label {
+  font-size: 12px !important;
+  font-weight: 100;
+}
+
+.input-group--text-field input,
+.input-group--text-field textarea {
+  font-size: 12px !important;
+}
+
+.fs3 {
+  font-size: 3rem;
+}
+
+.input-group--text-field input,
+.input-group--text-field textarea {
+  font-weight: 100 !important;
+}
+
+.theme--dark .input-group input:disabled,
+.application .theme--dark.input-group input:disabled,
+.theme--dark .input-group textarea:disabled,
+.application .theme--dark.input-group textarea:disabled {
+  color: white;
+}
+
+.list__tile {
+  font-weight: 100;
+}
+
+.mt--10 {
+  margin-top: -10px !important;
+}
+
+.mt--30 {
+  margin-top: -30px !important;
+}
+
+.ml--10 {
+  margin-top: -10px !important;
+}
+
+.mb-60 {
+  margin-bottom: 60px !important;
+}
+

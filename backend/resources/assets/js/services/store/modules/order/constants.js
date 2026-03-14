@@ -1,0 +1,18 @@
+export const SET_ORDERS = 'SET_ORDERS';
+export const INSERT_ORDER = 'INSERT_ORDER';
+export const ORDER_UPDATE = 'ORDER_UPDATE';
+
+export const SET_SHEET = 'SET_SHEET';
+export const SET_ERRORS = 'SET_ERRORS';
+
+export const MEMBERS_UPDATE = 'MEMBERS_UPDATE';
+export const TASKS_UPDATE = 'TASKS_UPDATE';
+export const INSERT_TASK = 'INSERT_TASK';
+export const MEDIA_UPDATE = 'MEDIA_UPDATE';
+export const DELIVERIES_UPDATE = 'DELIVERIES_UPDATE';
+export const INSERT_DELIVERY = 'INSERT_DELIVERY';
+export const SUMMARY_UPDATE = 'SUMMARY_UPDATE';
+export const ITEMS_UPDATE = 'ITEMS_UPDATE';
+export const STATE_UPDATE = 'STATE_UPDATE';
+
+export const PROGRESS_UPDATE = 'PROGRESS_UPDATE';

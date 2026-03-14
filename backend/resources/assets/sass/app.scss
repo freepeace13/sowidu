@@ -1,0 +1,21 @@
+//@import '~flag-icon-css/sass/flag-icon';
+@import 'common/variables';
+@import 'components/all';
+@import 'common/login_reg';
+@import 'common/global';
+@import 'common/colors';
+@import 'common/card';
+@import 'common/others';
+@import 'common/desktop';
+@import 'common/media';
+@import 'common/utils';
+
+@import 'modules/contact/all';
+
+.theme--light.v-text-field--solo > .v-input__control > .v-input__slot {
+    background: #fff !important;
+}
+
+.theme--dark.v-text-field--solo > .v-input__control > .v-input__slot.transparent {
+    background: transparent !important;
+}

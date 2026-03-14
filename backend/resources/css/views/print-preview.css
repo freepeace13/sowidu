@@ -1,0 +1,173 @@
+#preview-sheet-container {
+    .page-break {
+        page-break-after: always !important;
+    }
+
+    line-height: 17px;
+}
+
+.preview-sheet {
+    width: 210mm;
+    height: 297mm;
+    max-width: 210mm;
+
+    box-sizing: border-box;
+
+    padding-left: 12.5mm;
+    padding-right: 12.5mm;
+    padding-top: 5mm;
+    padding-bottom: 5mm;
+
+    @apply tw-mb-10 tw-mx-auto;
+
+    .invoice-sheet-header {
+        margin-top: 15mm;
+    }
+
+    .invoice-footer-container {
+        margin-bottom: 10mm;
+    }
+
+    .page-label {
+        @apply tw-absolute tw-top-3 tw-left-0 tw-text-center tw-w-full tw-text-xs tw-font-thin;
+    }
+
+    .invoice-body {
+        @apply tw-flex tw-flex-col;
+    }
+
+    &.subsequent-page {
+        .invoice-body {
+            @apply tw-flex tw-flex-col;
+        }
+    }
+
+    .invoice-notes {
+        @apply tw-flex tw-flex-col tw-h-full tw-justify-end;
+    }
+
+    .v-label {
+        @apply tw-text-sm;
+    }
+    .invoice-items-table {
+        @apply !tw-shadow-none;
+
+        .line-items-table {
+            border: none !important;
+            @apply !tw-shadow-none;
+        }
+
+        .item-row {
+            @apply tw-h-auto;
+        }
+
+        thead tr {
+            @apply !tw-border-b-0;
+        }
+
+        tr {
+            &.no-border {
+                @apply !tw-border-t-0;
+            }
+        }
+    }
+
+    &.is-downloading {
+        margin-bottom: -40px !important; /* This fix adding extra page */
+        @apply !tw-shadow-none;
+
+        #preview-sheet-container {
+            margin: 0;
+            padding: 0;
+        }
+
+        .no-print {
+            display: none !important;
+        }
+
+        .html2pdf__page-break {
+            /* display: none !important; */
+            page-break-after: always !important;
+        }
+
+        .invoice-items-table {
+            @apply !tw-shadow-none;
+
+            table {
+                border-top: 0px solid transparent !important;
+            }
+        }
+    }
+
+    .double-underline {
+        border-top: 3px double #000;
+    }
+
+    .single-border {
+        border-top: 1px solid #000;
+    }
+
+    .edit-subject-button {
+        z-index: 1;
+        margin-top: 36%;
+        margin-right: -44px;
+    }
+
+    .edit-notes-button {
+        z-index: 1;
+        margin-top: 36%;
+        margin-right: -94px;
+    }
+
+    .blank {
+        &.tw-h-7 {
+            height: 28px;
+        }
+    }
+}
+
+.small.v-input {
+    font-size: 12px;
+    @apply tw-min-h-5;
+}
+
+@media print {
+    @page {
+        padding: 0;
+        margin: 0;
+        size: auto;
+    }
+
+    .no-padding {
+        padding: 0 !important;
+    }
+
+    .elevation-10,
+    .v-toolbar {
+        box-shadow: none !important;
+    }
+
+    body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #preview-sheet-container {
+        margin: 0;
+        padding: 0;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .html2pdf__page-break {
+        page-break-after: always !important;
+    }
+
+    .preview-sheet {
+        width: 210mm;
+        height: 297mm;
+    }
+}

@@ -1,0 +1,169 @@
+.float-right {
+    float: right !important;
+}
+.float-left {
+    float: left !important;
+}
+// Top
+.t-0 {
+    top: $size-0 !important;
+}
+.t-1 {
+    top: $size-1 !important;
+}
+.t-2 {
+    top: $size-2 !important;
+}
+.t-3 {
+    top: $size-3 !important;
+}
+.t-4 {
+    top: $size-4 !important;
+}
+.t-5 {
+    top: $size-5 !important;
+}
+// Bottom
+.b-0 {
+    bottom: $size-0 !important;
+}
+.b-1 {
+    bottom: $size-1 !important;
+}
+.b-2 {
+    bottom: $size-2 !important;
+}
+.b-3 {
+    bottom: $size-3 !important;
+}
+.b-4 {
+    bottom: $size-4 !important;
+}
+.b-5 {
+    bottom: $size-5 !important;
+}
+// Right
+.r-0 {
+    right: $size-0 !important;
+}
+.r-1 {
+    right: $size-1 !important;
+}
+.r-2 {
+    right: $size-2 !important;
+}
+.r-3 {
+    right: $size-3 !important;
+}
+.r-4 {
+    right: $size-4 !important;
+}
+.r-5 {
+    right: $size-5 !important;
+}
+// Left
+.l-0 {
+    left: $size-0 !important;
+}
+.l-1 {
+    left: $size-1 !important;
+}
+.l-2 {
+    left: $size-2 !important;
+}
+.l-3 {
+    left: $size-3 !important;
+}
+.l-4 {
+    left: $size-4 !important;
+}
+.l-5 {
+    left: $size-5 !important;
+}
+// Align items
+.align-items-start {
+    align-items: start !important;
+}
+.align-items-center {
+    align-items: center !important;
+}
+.align-items-end {
+    align-items: end !important;
+}
+// Align self
+.align-self-start {
+    align-self: start !important;
+}
+.align-self-center {
+    align-self: center !important;
+}
+.align-self-end {
+    align-self: end !important;
+}
+
+.cursor-clickable {
+    cursor: pointer;
+}
+
+.text-underline-none {
+    text-decoration: none !important;
+    * {
+        text-decoration: none !important;
+    }
+}
+
+.full-width {
+    width: 100% !important;
+}
+
+.bold {
+    font-weight: bold !important;
+}
+
+.half-width {
+    width: 50% !important;
+}
+
+.fill-height {
+    height: 100% !important;
+}
+
+.position-relative {
+    position: relative !important;
+}
+
+.position-absolute {
+    position: absolute !important;
+}
+
+.bordered {
+    border: 1px solid #777;
+}
+
+.speed-dial-right {
+    .v-speed-dial__list {
+        right: 10% !important;
+    }
+}
+
+.overflow-y-auto {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.overflow-x-auto {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.w-20 {
+    width: 20%;
+}
+
+.w-30 {
+    width: 30%;
+}
+
+.w-40 {
+    width: 40%;
+}

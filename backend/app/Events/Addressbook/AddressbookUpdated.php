@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Events\Addressbook;
+
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class AddressbookUpdated
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $user;
+
+    public $addressbook;
+
+    /**
+     * Create a new event instance.
+     *
+     * @return void
+     */
+    public function __construct($user, $addressbook)
+    {
+        $this->user = $user;
+        $this->addressbook = $addressbook;
+    }
+
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return \Illuminate\Broadcasting\Channel|array
+     */
+    public function broadcastOn()
+    {
+        return new PrivateChannel('channel-name');
+    }
+}

@@ -1,0 +1,181 @@
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.display-flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.align-items-start {
+    align-items: start;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.min-w-32 {
+    min-width: 32px;
+}
+
+.underline {
+    text-decoration-line: underline;
+}
+
+.align-end.v-input {
+    align-items: flex-end;
+    justify-content: end;
+
+    .v-input--selection-controls__input {
+        margin-right: 0px;
+    }
+}
+
+.border-radius-none {
+    border-radius: 0px !important;
+}
+
+.self-stretch {
+    align-self: stretch;
+}
+
+.input-no-margin-bottom {
+    .v-input__slot {
+        margin-bottom: 0px;
+    }
+}
+
+.hover-underline {
+    &:hover {
+        text-decoration: underline !important;
+    }
+}
+
+.btn-xs {
+    width: 32px;
+    height: 32px;
+    margin: 0px;
+}
+
+.border-primary {
+    border: 1px solid #37474f;
+}
+
+.border-b-primary {
+    border-bottom: 1px solid #37474f;
+}
+
+.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+
+    span,
+    button {
+        &:first-child {
+            pointer-events: none;
+        }
+    }
+}
+
+div[role='listitem'] {
+    &.disabled {
+        opacity: 0.4;
+        cursor: wait;
+
+        .v-list__tile {
+            pointer-events: none;
+        }
+    }
+}
+
+.object-cover {
+    object-fit: cover;
+}
+
+.max-h-80-screen {
+    max-height: 80vh;
+}
+
+.border {
+    border: 1px solid;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+.border-none {
+    border: 0px !important;
+}
+
+.rounded-right {
+    border-radius: 0 25px 25px 0;
+}
+
+/* Hover animation */
+.hover-grow {
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transform: perspective(1px px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgb(0 0 0 / 0%);
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    -webkit-transition-property: transform;
+    transition-property: transform;
+
+    &:hover {
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+}
+
+/* Add border on image */
+.w-border {
+    @apply tw-border tw-border-solid tw-border-gray-200;
+}
+
+.mt-6 {
+    margin-top: 64px !important;
+}
+
+.border-top-primary {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.has-navbar-on-top {
+    @apply !tw-mt-theme-5 md:!tw-mt-theme-6;
+}
+
+.subheader {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.required-input {
+    label::after {
+        content: ' *';
+        color: red;
+    }
+}
+
+/* New Design comes from design.sowidu.de */
+.info-label {
+    font-weight: 700;
+}

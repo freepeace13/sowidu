@@ -1,0 +1,27 @@
+<?php
+
+namespace Packages\RestApi\Resources;
+
+class AnonymousResourceCollection extends ResourceCollection
+{
+    /**
+     * The name of the resource being collected.
+     *
+     * @var string
+     */
+    public $collects;
+
+    /**
+     * Create a new anonymous resource collection.
+     *
+     * @param  mixed  $resource
+     * @param  string  $collects
+     * @return void
+     */
+    public function __construct($resource, $collects, $resourceCallback = null)
+    {
+        $this->collects = $collects;
+
+        parent::__construct($resource, $resourceCallback);
+    }
+}
