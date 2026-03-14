@@ -1,0 +1,29 @@
+{
+  "cli": {
+    "version": ">= 3.16.0",
+    "requireCommit": true
+  },
+  "build": {
+    "production": {
+      "node": "18.18.0",
+      "distribution": "internal",
+      "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://sowidu.de/api/v1"
+      }
+    },
+    "staging": {
+      "node": "18.18.0",
+      "channel": "staging",
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_APP_NAME": "Sowidu (Staging)",
+        "EXPO_PUBLIC_API_URL": "https://staging.sowidu.de/api/v1",
+        "EXPO_PUBLIC_APP_VARIANT": "com.sowidu.staging"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

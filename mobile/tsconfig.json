@@ -1,0 +1,17 @@
+{
+  "extends": "expo/tsconfig.base",
+  "include": ["./src/**/**/*", "custom.d.ts"],
+  "compilerOptions": {
+    "strict": true,
+    "allowJs": true,
+    "jsx": "react-native",
+    "module": "ES6",
+    "paths": {
+      "@assets/*": ["./assets/*"],
+      "@application/*": ["./src/application/*"],
+      "@domain/*": ["./src/domain/*"],
+      "@infrastructure/*": ["./src/infrastructure/*"],
+      "@presentation/*": ["./src/presentation/*"]
+    }
+  }
+}
